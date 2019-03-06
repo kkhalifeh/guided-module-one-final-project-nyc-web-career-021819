@@ -1,92 +1,90 @@
 # require 'pry'
-
 class BeerBud
 
-attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beers, :user_input_from_selected_beer
+attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beers, :user_input_from_selected_beer, :selected_fav_beer
 #defining global variables
 
 # $user_input_from_favorite_beers = nil
 # @user_main_menu_input = nil
-
 def run
   welcome
   get_username
   #user name is returned downcase
   # User .find_by("name) to evaluate if new or returning user
   #assuming returning user
+  main_menu_loop
+end
+
+def main_menu_loop
   main_menu
   loop do
     change_menu(user_main_menu_input)
   end
+end
 
 
-def get_username
-  #method to check if username exists in data base
-  # if it doesnt, create it a new user
-  puts "Please enter your user name"
-  name = gets.chomp.downcase
-  @current_user = User.find_or_create_by(user_name: name)
+def welcome
+  puts "Welcome to BeerBud!"
   sleep(1)
 end
 
-def main_menu
-  puts "Welcome back! What would you like to do?"
-  sleep(1)
-  puts "1. View my favorites"
-  puts "2. Access beer preferences"
-  puts "3. Discover new beers"
-  puts "4. Close program and drink"
-  @user_main_menu_input = gets.chomp.to_i
-end
 
-def favorite_beers
-  #pull data from join_table :favorites, puts beer.name from array []
-  #limit to 8 selections
-  #below where it says puts, pull data
-  favorite_list_array = self.current_user.favorites
-
-  puts "Your favorites list:"
-
-  puts "Use 0-#{favorite_list_array.length} to make your selection"
-  fav_list = favorite_list_array.each_with_index do |beer, index|
-    puts "(#{index}) #{beer.beer.name}"
+  def get_username
+    #method to check if username exists in data base
+    # if it doesnt, create it a new user
+    puts "Please enter your user name"
+    name = gets.chomp.downcase
+    @current_user = User.find_or_create_by(user_name: name)
+    sleep(1)
   end
-  # puts "(0)  Beer A" #favorites_by_user[0]
-  # puts "(1)  Beer B"
-  # puts "(2)  Beer C"
-  # puts "(3)  Beer D"
-  # puts "(4)  Beer E"
-  # puts "(5)  Beer F"
-  # puts "(6)  Beer G"
-  # puts "(7)  Beer H"
-  # puts "(8)  Beer I"
-  puts "(#{fav_list.length}) Return to main menu"
-  # puts user_input_from_favorite_beers
-  @user_input_from_favorite_beers = gets.chomp.to_i
-  puts user_input_from_favorite_beers
-    if user_input_from_favorite_beers == fav_list.length
 
-      main_menu
-    else
-      puts "CURRENT BEER SELECTION: #{favorite_list_array[user_input_from_favorite_beers].beer.name}" #code should take user_input_from_favorite_beers and display beername dynamically
-      # binding.pry
-      selected_beer_menu
-      @user_input_from_selected_beer = gets.chomp.to_i
-        if user_input_from_selected_beer == 0
-          rate_beer #call method to rate beer, this should update our user_favorite instance of this beer
-        elsif user_input_from_selected_beer == 1
-          pairing_info #method to display pairing info , input should take selected
-        elsif user_input_from_selected_beer == 2
-          remove_from_favorite #method to destroy favorite object from :favorite_table
+  def main_menu
+    puts "Welcome back! What would you like to do?"
+    sleep(1)
+    puts "(1) View my favorites"
+    puts "(2) Access beer preferences"
+    puts "(3) Discover new beers"
+    puts "(4) Close program and drink"
+    @user_main_menu_input = gets.chomp.to_i
+  end
+
+  def favorite_beers
+    #pull data from join_table :favorites, puts beer.name from array []
+    #limit to 8 selections
+    #below where it says puts, pull data
+    favorite_list_array = self.current_user.favorites
+    puts "Your favorites list:"
+    puts "Use 0-#{favorite_list_array.length} to make your selection"
+    fav_list = favorite_list_array.each_with_index do |beer, index|
+      puts "(#{index}) #{beer.beer.name}"
+    end
+    puts "(#{fav_list.length}) Return to main menu"
+    @user_input_from_favorite_beers = gets.chomp.to_i
+    @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
+    puts user_input_from_favorite_beers
+      if user_input_from_favorite_beers == fav_list.length
+        main_menu_loop
+      else
+        puts "CURRENT BEER SELECTION: #{selected_fav_beer.name}"
+        selected_beer_menu
+        @user_input_from_selected_beer = gets.chomp.to_i
+          if user_input_from_selected_beer == 0
+            rate_beer #call method to rate beer, this should update our user_favorite instance of this beer
+          elsif user_input_from_selected_beer == 1
+            pairing_info #method to display pairing info , input should take selected
+          elsif user_input_from_selected_beer == 2
+            remove_from_favorite #method to destroy favorite object from :favorite_table
         else
-          main_menu
-        end
+          main_menu_loop
       end
+    end
+  end
 
   def pairing_info
     puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers}"
-    pairings = Favorite.where(user_id: self.current_user.id)[user_input_from_favorite_beers].beer.foodPairings
-    glassware = Favorite.where(user_id: self.current_user.id)[user_input_from_favorite_beers].beer.glassware
+    # binding.pry
+    pairings = selected_fav_beer.foodPairings
+    glassware = selected_fav_beer.glassware
     puts "Have it with: #{pairings}"
     puts "Serve it in a: #{glassware}"
     #write code to display information for Beer.where(id= $user_input_from_favorite_beers)
@@ -94,11 +92,11 @@ def favorite_beers
     puts "Hit 1 to return to main menu when you're ready"
     gets.chomp
     sleep(1)
-    main_menu
+    main_menu_loop
   end
 
   def remove_from_favorite
-    #remove object from favorite_table
+    binding.pry
     sleep(1)
     puts "Hang on...we are destroying this beer from your favorites"
     puts " BEER Number: #{$user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
@@ -222,19 +220,6 @@ def favorite_beers
     end
   end
 
-<<<<<<< HEAD
-def change_menu(user_main_menu_input)
-  sleep(1)
-  if @user_main_menu_input == 1
-    favorite_beers #execute favorite beers method
-  elsif @user_main_menu_input == 2
-    beer_preferences #executes #beer_preferences method
-  elsif @user_main_menu_input == 3
-    puts discover_beers_menu #execute discover_beers_menu method
-  elsif @user_main_menu_input == 4
-    puts "(●´▽｀●)_旦”☆”旦_(○´ー｀○)"
-    sleep(1)
-    puts "Byeeee and enjoy your drink!"
 
   def most_popular_beers
     #method to search favorites_table for most favorite
@@ -362,10 +347,10 @@ def change_menu(user_main_menu_input)
       sleep(1)
       puts "Had a bit of drink eh? Please select a valid input (1-4)"
       sleep(1)
-      puts "1. View my favorites"
-      puts "2. Access beer preferences"
-      puts "3. Discover new beers"
-      puts "4. Close program and drink"
+      puts "(1) View my favorites"
+      puts "(2) Access beer preferences"
+      puts "(3) Discover new beers"
+      puts "(4) Close program and drink"
     end
   end
 
