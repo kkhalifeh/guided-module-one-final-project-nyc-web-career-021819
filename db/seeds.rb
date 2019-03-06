@@ -5,21 +5,21 @@
 # )
 
 
-User.destroy_all
-users = User.create([
-  {:user_name => "richtam"},
-  {:user_name => "khaledkhalifeh"},
-  {:user_name => "user1"},
-  {:user_name => "user2"},
-  {:user_name => "user3"},
-  {:user_name => "user4"},
-  {:user_name => "user5"},
-  {:user_name => "user6"},
-  {:user_name => "user7"},
-  {:user_name => "user8"}
-])
+# User.destroy_all
+# users = User.create([
+#   {:user_name => "richtam"},
+#   {:user_name => "khaledkhalifeh"},
+#   {:user_name => "user1"},
+#   {:user_name => "user2"},
+#   {:user_name => "user3"},
+#   {:user_name => "user4"},
+#   {:user_name => "user5"},
+#   {:user_name => "user6"},
+#   {:user_name => "user7"},
+#   {:user_name => "user8"}
+# ])
 
 Favorite.destroy_all
 favorites = 50.times do Favorite.create ([
-  {:user_id => rand(1..10), :beer_id => rand(1286...1540)},
+  {:user_id => rand(49..58), :beer_id => rand(1286...1540)},
   ]) end

@@ -1,7 +1,8 @@
 require_relative "../config/environment.rb"
 require_relative '../lib/command_line_interface.rb/'
 
-Beerbud.new.run
+ActiveRecord::Base.logger = false
+BeerBud.new.run
 # welcome
 # user_name = get_username
 # #user name is returned downcase
