@@ -4,35 +4,570 @@ require 'pry'
 
 
 # *************** SEND REQUEST TO API TO PULL BEER DATA (CAN SPECIFY NUMBER OF PAGES TO PARSE) **********************
-def get_all_beers
-  counter = 24
-  response_array = []
-  while counter < 100
-    response_string = RestClient.get('https://api.brewerydb.com/v2/beers/?p='"#{counter}"'&key=e8b4daa262ed98aba464e1b231c0c79d')
-    response_hash = JSON.parse(response_string)
-    response_array << response_hash["data"]
-    counter += 1
-    # binding.pry
-  end
-  response_array.flatten
+# def get_all_beers
+#   counter = 1
+#   response_array = []
+#   while counter < 24
+#     response_string = RestClient.get('https://sandbox-api.brewerydb.com/v2/beers/?p='"#{counter}"'&key=67caa2c52c8169eeea83e4c37e6d9b14')
+#     response_hash = JSON.parse(response_string)
+#     response_array << response_hash["data"]
+#     counter += 1
+#     # binding.pry
+#   end
+#   response_array.flatten
+# end
+# beer_data = get_all_beers
+#
+# test_beer_data = []
+# beer_data.each do |beer_info|
+#   hash = Hash.new
+#   if beer_info["style"] && beer_info["glass"]
+#     hash[:name] = beer_info["name"]
+#     hash[:abv] = beer_info["abv"]
+#     hash[:foodPairings] = beer_info["foodPairings"]
+#     hash[:glassware] = beer_info["glass"]["name"]
+#     hash[:style] = beer_info["style"]["name"]
+#     test_beer_data << hash
+#   end
+# end
+
+beers = [{:name=>"'Murican Pilsner", :abv=>"5.5", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"2 x 4", :abv=>"8.7", :foodPairings=>nil, :glassware=>"Pint", :style=>"Other Belgian-Style Ales"},
+ {:name=>"420 Extra Pale Ale", :abv=>"5.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"471 ESB - Extra Special Bitter", :abv=>"7.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Extra Special Bitter"},
+ {:name=>"471 Small Batch IPA", :abv=>"9.2", :foodPairings=>nil, :glassware=>"Tulip", :style=>"American-Style India Pale Ale"},
+ {:name=>"A Little Sumpin' Sumpin'", :abv=>"7.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"ABLE Best Britter", :abv=>"4.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"Special Bitter or Best Bitter"},
+ {:name=>"Agave Wheat", :abv=>"5.9", :foodPairings=>nil, :glassware=>"Weizen", :style=>"Light American Wheat Ale or Lager with Yeast"},
+ {:name=>"Alt Route - Beer Camp Across America", :abv=>"6.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"German-Style Altbier"},
+ {:name=>"Audition - Imperial Pilsner", :abv=>"8", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"Audition - Pilsner", :abv=>"5.2", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"Autumn Ale", :abv=>"6", :foodPairings=>nil, :glassware=>"Pint", :style=>"German-Style Märzen"},
+ {:name=>"Avalanche Ale", :abv=>"4.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Bad Luck Blonde", :abv=>"6.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Golden or Blonde Ale"},
+ {:name=>"Beerhive", :abv=>"8.47", :foodPairings=>nil, :glassware=>"Pint", :style=>"Belgian-Style Tripel"},
+ {:name=>"Bigfoot", :abv=>"9.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Bigfoot", :abv=>"9.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Bigfoot", :abv=>"9.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Bigfoot", :abv=>"9.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Bigfoot", :abv=>"9.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Bigfoot", :abv=>"9.6", :foodPairings=>nil, :glassware=>"Snifter", :style=>"British-Style Barley Wine Ale"},
+ {:name=>"Black Crown", :abv=>"6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber Lager"},
+ {:name=>"Black Mad Hatter India Pale Ale",
+  :abv=>"5.56",
+  :foodPairings=>"aged cheddars, arugula in vinaigrette, portabello stir-fry",
+  :glassware=>"Pint",
+  :style=>"American-Style Black Ale"},
+ {:name=>"Black Shack Porter", :abv=>"5.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"Robust Porter"},
+ {:name=>"Black Vapor", :abv=>"6", :foodPairings=>nil, :glassware=>"Pint", :style=>"German-Style Schwarzbier"},
+ {:name=>"Blindfold", :abv=>"7.4", :foodPairings=>nil, :glassware=>"Tulip", :style=>"American-Style Black Ale"},
+ {:name=>"Blonde Ale", :abv=>nil, :foodPairings=>nil, :glassware=>"Pint", :style=>"Golden or Blonde Ale"},
+ {:name=>"Blue", :abv=>"4.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Fruit Beer"},
+ {:name=>"Blueberry Ale", :abv=>"4.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Fruit Beer"},
+ {:name=>"Bonnaroo Brew", :abv=>"4.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"French & Belgian-Style Saison"},
+ {:name=>"Breckenridge Christmas Ale", :abv=>"7.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Strong Pale Ale"},
+ {:name=>"Brown Eyed Buckeye", :abv=>"8.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Brown Shugga'", :abv=>"9.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Strong Pale Ale"},
+ {:name=>"Bud Light", :abv=>"4.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Bud Light Chelada", :abv=>"4.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Bud Light Lime", :abv=>"4.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Bud Light Platinum", :abv=>"6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Budweiser", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Budweiser Chelada", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Budweiser Select", :abv=>"4.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Busch", :abv=>"4.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Busch Ice", :abv=>"5.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Ice Lager"},
+ {:name=>"Busch Light", :abv=>"4.1", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Busch Signature Copper Lager", :abv=>"5.7", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Cabin Fever",
+  :abv=>"6.5",
+  :foodPairings=>"Roasted meats, dried fruits, gruyere and smoked cheese.",
+  :glassware=>"Pint",
+  :style=>"American-Style Brown Ale"},
+ {:name=>"California Black Beer",
+  :abv=>"4.9",
+  :foodPairings=>"BBQ and red meats, cheeses.",
+  :glassware=>"Pint",
+  :style=>"American-Style Dark Lager"},
+ {:name=>"CANfusion - Beer Camp Across America",
+  :abv=>"7.2",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"Rye Ale or Lager with or without Yeast"},
+ {:name=>"Cappuccino Stout", :abv=>"8.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"Sweet or Cream Stout"},
+ {:name=>"Celebration Ale", :abv=>"6.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Fresh \"Wet\" Hop Ale"},
+ {:name=>"Censored Rich Copper Ale", :abv=>"6.75", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Centennial Hop Mountain Marzen (Batch No. 80524)",
+  :abv=>"5.9",
+  :foodPairings=>nil,
+  :glassware=>"Mug",
+  :style=>"American-Style Märzen / Oktoberfest"},
+ {:name=>"Charkoota Rye",
+  :abv=>"8.4",
+  :foodPairings=>"Charciterie & all things prok!",
+  :glassware=>"Pint",
+  :style=>"German-Style Doppelbock"},
+ {:name=>"Chico King - Beer Camp Across America", :abv=>"6.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Christmas Jam", :abv=>"4.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"Session Beer"},
+ {:name=>"Country Pale Ale", :abv=>"5.1", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Crank Tank", :abv=>"5.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Light American Wheat Ale or Lager with Yeast"},
+ {:name=>"Cream Ale", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Cream Ale or Lager"},
+ {:name=>"Dale's Pale Ale", :abv=>"6.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Dank Tank Ghoulash", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"DayTime Ale", :abv=>"4.65", :foodPairings=>nil, :glassware=>"Pint", :style=>"Session India Pale Ale"},
+ {:name=>"Daytona Dark Wheat Lager (Batch No. 32218)",
+  :abv=>"5",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"American-Style Dark Lager"},
+ {:name=>"De Achste Hond Peach Sour", :abv=>"7", :foodPairings=>nil, :glassware=>"Tulip", :style=>"American-Style Sour Ale"},
+ {:name=>"DevESTATEtion",
+  :abv=>"6.7",
+  :foodPairings=>
+   "Salad with Citrus based dressing, Smokey Barbeque, Tamales, Cilantro-focused Salsa, Smoked Gouda, Spice cake, Sweet carrot cake",
+  :glassware=>"Pint",
+  :style=>"American-Style Black Ale"},
+ {:name=>"Deviant Dale’s", :abv=>"8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"DogZilla Black IPA", :abv=>"6.9", :foodPairings=>nil, :glassware=>"Mug", :style=>"American-Style India Pale Ale"},
+ {:name=>"Doppel Sticky", :abv=>"7.7", :foodPairings=>nil, :glassware=>"Snifter", :style=>"German-Style Altbier"},
+ {:name=>"Doppel Weizen", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"South German-Style Hefeweizen / Hefeweissbier"},
+ {:name=>"Double Latte - Beer Camp Across America", :abv=>"7.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Sweet or Cream Stout"},
+ {:name=>"Dragon's Milk",
+  :abv=>"11",
+  :foodPairings=>"Red meat, smoked foods, balsamic, rich cheese & dark chocolate.",
+  :glassware=>"Tulip",
+  :style=>"American-Style Imperial Stout"},
+ {:name=>"Dry Hopped Coastal Pilsner (Batch No. 23185)",
+  :abv=>"6",
+  :foodPairings=>nil,
+  :glassware=>"Pilsner",
+  :style=>"American-Style Pilsener"},
+ {:name=>"Dude of York", :abv=>"4.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Ordinary Bitter"},
+ {:name=>"Earth Day EPA", :abv=>"5.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"Extra Special Bitter"},
+ {:name=>"el Mole Ocho", :abv=>"8.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"Specialty Beer"},
+ {:name=>"Electric Ray - Beer Camp Across America",
+  :abv=>"8.5",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"American-Style Premium Lager"},
+ {:name=>"Envious",
+  :abv=>"7.5",
+  :foodPairings=>"charcuterie, roasted poultry, grilled stone fruits.",
+  :glassware=>"Tulip",
+  :style=>"Fruit Beer"},
+ {:name=>"ESB - Early Spring Beer", :abv=>"5.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Estate Ale",
+  :abv=>"6.7",
+  :foodPairings=>"Caprese Salad, Southern Barbeque, Tamales, Cilantro-Focused Salsas",
+  :glassware=>"Pint",
+  :style=>"Specialty Beer"},
+ {:name=>"Fall Ball Red", :abv=>"8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Imperial Red Ale"},
+ {:name=>"Farmhouse Hatter",
+  :abv=>"5.07",
+  :foodPairings=>"seafood, fennel, mushrooms and pickled veggies",
+  :glassware=>"Tulip",
+  :style=>"Belgian-Style Pale Ale"},
+ {:name=>"Flipside Red IPA",
+  :abv=>"6.2",
+  :foodPairings=>"Asian spiced dishes, Steak fajitas, Port-Salut or other lightly tangy cheese, Caramel based desserts",
+  :glassware=>"Pint",
+  :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Fresh Hop - Mountain Series", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"Fresh \"Wet\" Hop Ale"},
+ {:name=>"Fugli", :abv=>"5.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Full Circle",
+  :abv=>"4.9",
+  :foodPairings=>"seafood, corn, veggies and mild white cheeses",
+  :glassware=>"Pint",
+  :style=>"German-Style Kölsch / Köln-Style Kölsch"},
+ {:name=>"G'Knight", :abv=>"8.7", :foodPairings=>nil, :glassware=>"Pint", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Georgia Brown", :abv=>"5.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Brown Ale"},
+ {:name=>"Glissade Golden Bock", :abv=>"6.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"German-Style Heller Bock/Maibock"},
+ {:name=>"GnarlyWine", :abv=>"10.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Golden Cap Saison Ale", :abv=>"6.25", :foodPairings=>nil, :glassware=>"Pint", :style=>"French & Belgian-Style Saison"},
+ {:name=>"Gravenstime", :abv=>"4.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Session India Pale Ale"},
+ {:name=>"Green Monsta IPA", :abv=>"7.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Green Valley Wild Hop Lager", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Premium Lager"},
+ {:name=>"Gubna", :abv=>"10", :foodPairings=>nil, :glassware=>"Pint", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Guinness 250th Anniversary Stout", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Stout"},
+ {:name=>"Guinness Black Lager", :abv=>"4.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"German-Style Schwarzbier"},
+ {:name=>"Guinness Blonde", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Guinness Draught", :abv=>"4.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"Classic Irish-Style Dry Stout"},
+ {:name=>"Guinness Dublin Porter", :abv=>"3.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Foreign (Export)-Style Stout"},
+ {:name=>"Guinness Extra Stout", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Stout"},
+ {:name=>"Guinness Foreign Extra", :abv=>"7.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Foreign (Export)-Style Stout"},
+ {:name=>"Guinness Generous Ale", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Irish-Style Red Ale"},
+ {:name=>"Guinness Red Harvest Stout", :abv=>"4.1", :foodPairings=>nil, :glassware=>"Pint", :style=>"Classic Irish-Style Dry Stout"},
+ {:name=>"Happy Ending", :abv=>"9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Imperial Stout"},
+ {:name=>"Harmon Killerbrew", :abv=>"7.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Irish-Style Red Ale"},
+ {:name=>"Harp Lager", :abv=>"5", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Premium Lager"},
+ {:name=>"Harp Premium Imported Lager", :abv=>"4.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Premium Lager"},
+ {:name=>"Harvest Ale", :abv=>"6.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Harvest Ale 2007", :abv=>"6.7", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Harvest Single Hop IPA - Equinox Hops",
+  :abv=>"6.5",
+  :foodPairings=>
+   "Greek-style grilled chicken, Blackened Catfish, Citrus salad with shaved parmesan and lemon-lime vinaigrette. Aged Monterey Jack, Dry Parmesan, Cotswold. Lemon sorbet with roasted pistachios",
+  :glassware=>"Pint",
+  :style=>"American-Style India Pale Ale"},
+ {:name=>"Hefe Proper Ale", :abv=>"4", :foodPairings=>nil, :glassware=>"Pint", :style=>"South German-Style Hefeweizen / Hefeweissbier"},
+ {:name=>"High Life Light", :abv=>"4.5", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Holiday Ale (2011)", :abv=>"7.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Specialty Beer"},
+ {:name=>"Holiday Leftovers Ale", :abv=>"7.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Specialty Beer"},
+ {:name=>"Hop Dog Fresh Hop Pale", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Fresh \"Wet\" Hop Ale"},
+ {:name=>"Hop Dog Harvest Pale Ale", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Tulip", :style=>"American-Style Pale Ale"},
+ {:name=>"Hop Harmony", :abv=>"6.7", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Hop Hash", :abv=>"7.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Hop Stoopid", :abv=>"8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Hopivore", :abv=>"5.84", :foodPairings=>nil, :glassware=>"Pint", :style=>"Fresh \"Wet\" Hop Ale"},
+ {:name=>"Hoptimum", :abv=>"10.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Huckleberry Cream Ale", :abv=>"5.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Cream Ale or Lager"},
+ {:name=>"Ichabod Pumpkin Ale",
+  :abv=>"5.2",
+  :foodPairings=>"roasted poultry, root vegetables, peanut sauce and caraway",
+  :glassware=>"Pint",
+  :style=>"Pumpkin Beer"},
+ {:name=>"Imperial Black IPA", :abv=>"7.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Black Ale"},
+ {:name=>"Imperial Hatter",
+  :abv=>"9.4",
+  :foodPairings=>"spicy heat, citrus and aged blue cheese",
+  :glassware=>"Pint",
+  :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Imperial Pils", :abv=>"8.6", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"Imperial Pilsner - Beer Camp #43", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"Imperial Pumpkin", :abv=>"8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Pumpkin Beer"},
+ {:name=>"Imperial Red Ale", :abv=>"7.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Irish-Style Red Ale"},
+ {:name=>"Imperial Red Ale", :abv=>"7.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Imperial Stout", :abv=>"9.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Stout"},
+ {:name=>"Johnny Berliner", :abv=>"4", :foodPairings=>nil, :glassware=>"Pint", :style=>"Berliner-Style Weisse (Wheat)"},
+ {:name=>"Kaliber", :abv=>"0.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Non-Alcoholic (Beer) Malt Beverages"},
+ {:name=>"Kellerweis", :abv=>"4.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"South German-Style Hefeweizen / Hefeweissbier"},
+ {:name=>"Lagunitas IPA", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Lagunitas Undercover Investigation Shut-Down Ale",
+  :abv=>"9.6",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"American-Style Pale Ale"},
+ {:name=>"Larry Imperial IPA", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Light IPA", :abv=>"4", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Little Sumpin’ Wild", :abv=>"8.74", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Long Steam IPA", :abv=>"5.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Lovebird Wheat", :abv=>"4.4", :foodPairings=>nil, :glassware=>"Weizen", :style=>"South German-Style Hefeweizen / Hefeweissbier"},
+ {:name=>"LowRYEder IPA", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"Rye Ale or Lager with or without Yeast"},
+ {:name=>"Lucky 13", :abv=>"8.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Lucky U IPA", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Mad Catter", :abv=>"7", :foodPairings=>nil, :glassware=>"Tulip", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Mad Hatter IPA",
+  :abv=>"7",
+  :foodPairings=>"Aged cheddars, herb-roasted poultry, vinaigrettes and six o’clock.",
+  :glassware=>"Pint",
+  :style=>"American-Style India Pale Ale"},
+ {:name=>"Maillard's Odyssey - Beer Camp Across America",
+  :abv=>"8.5",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"Dark American-Belgo-Style Ale"},
+ {:name=>"Mama's Little Yella Pils", :abv=>"5.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"German-Style Pilsener"},
+ {:name=>"Maximus", :abv=>"8.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Michigan Awesome Hatter",
+  :abv=>"5.8",
+  :foodPairings=>"Sharp cheddars, herb-roasted poultry and curry",
+  :glassware=>"Pint",
+  :style=>"American-Style Pale Ale"},
+ {:name=>"Michigan Hatter", :abv=>"4.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Mighty Brown", :abv=>"7.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Brown Ale"},
+ {:name=>"Milk Stout", :abv=>"5.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Sweet or Cream Stout"},
+ {:name=>"Miller Fortune", :abv=>"6.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Premium Lager"},
+ {:name=>"Miller Genuine Draft", :abv=>"4.66", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Miller High Life", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Miller Lite", :abv=>"4.2", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Miller64", :abv=>"2.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Monkey King",
+  :abv=>"5.6",
+  :foodPairings=>"Shellfish, spiced cheeses and citrus-laden vinaigrettes.",
+  :glassware=>"Pint",
+  :style=>"French & Belgian-Style Saison"},
+ {:name=>"Myron's Walk - Beer Camp Across America", :abv=>"5.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"Belgian-Style Pale Ale"},
+ {:name=>"Narwhal", :abv=>"10.2", :foodPairings=>nil, :glassware=>"Snifter", :style=>"American-Style Imperial Stout"},
+ {:name=>"Natty Daddy", :abv=>"8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Natural Ice", :abv=>"5.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"New Dogtown Pale Ale", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Night Time", :abv=>"7.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Black Ale"},
+ {:name=>"Night Tripper", :abv=>"10.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Imperial Stout"},
+ {:name=>"Night Tripper (2011)", :abv=>"10.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Imperial Stout"},
+ {:name=>"Noble Helles (Batch No. 32218)", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Münchner (Munich)-Style Helles"},
+ {:name=>"Noble Hopped Lager (Batch No. 32218)", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Nooner Session IPA",
+  :abv=>"4.8",
+  :foodPairings=>"Crispy San Diego-style fish tacos, Weisswurst, Cobb Salad\r\n\r\nWhite cheddar, Creamy Bleu, Asiago",
+  :glassware=>"Pint",
+  :style=>"American-Style India Pale Ale"},
+ {:name=>"Nut Brown Ale", :abv=>"5.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Brown Ale"},
+ {:name=>"Oak Aged Mad Hatter India Pale Ale",
+  :abv=>"7.22",
+  :foodPairings=>"smoked foods, tomatoes and beef",
+  :glassware=>"Pint",
+  :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Oatmeal Stout", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Oatmeal Stout"},
+ {:name=>"Octoberfest", :abv=>"5.2", :foodPairings=>nil, :glassware=>"Mug", :style=>"German-Style Märzen"},
+ {:name=>"Oktober-Fiesta",
+  :abv=>"5.5",
+  :foodPairings=>"Sauerbraten and pretzels",
+  :glassware=>"Pint",
+  :style=>"American-Style Amber Lager"},
+ {:name=>"Old Chico Crystal Wheat",
+  :abv=>"4.8",
+  :foodPairings=>"Citrus Salad, Sushi, Grilled Chicken",
+  :glassware=>"Pint",
+  :style=>"American-Style Pale Ale"},
+ {:name=>"Old Chub", :abv=>"8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Scotch Ale"},
+ {:name=>"One Nut", :abv=>"6.1", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Brown Ale"},
+ {:name=>"Oskar Blues IPA", :abv=>"6.43", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Ovila Abbey Quad with Plums", :abv=>"10.2", :foodPairings=>nil, :glassware=>"Snifter", :style=>"Belgian-Style Quadrupel"},
+ {:name=>"Ovila Abbey Saison", :abv=>"7.5", :foodPairings=>nil, :glassware=>"Snifter", :style=>"French & Belgian-Style Saison"},
+ {:name=>"Ovila Belgian Golden Ale", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Tulip", :style=>"Belgian-Style Pale Strong Ale"},
+ {:name=>"Ovila Dubbel", :abv=>"7.5", :foodPairings=>nil, :glassware=>"Tulip", :style=>"Belgian-Style Dubbel"},
+ {:name=>"Ovila Quad", :abv=>"10.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Belgian-Style Tripel"},
+ {:name=>"Ovila Wood-Aged Saison", :abv=>"7.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"French & Belgian-Style Saison"},
+ {:name=>"Pacific Daylight", :abv=>"3.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"Session Beer"},
+ {:name=>"Pale Ale", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Paleooza",
+  :abv=>"4.4",
+  :foodPairings=>"Spicy dishes, hard cheeses, greens.",
+  :glassware=>"Pint",
+  :style=>"American-Style Pale Ale"},
+ {:name=>"Pandora's Bock", :abv=>"7.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Traditional German-Style Bock"},
+ {:name=>"Pilgrim's Dole",
+  :abv=>"12",
+  :foodPairings=>"Caramel and Vanilla based Desserts",
+  :glassware=>"Tulip",
+  :style=>"American-Style Wheat Wine Ale"},
+ {:name=>"Pils", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"German-Style Pilsener"},
+ {:name=>"Pomona Queen", :abv=>"4.8", :foodPairings=>"Yes, please.", :glassware=>"Pint", :style=>"American-Style Amber Lager"},
+ {:name=>"Porter", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Brown Porter"},
+ {:name=>"Porter Porter", :abv=>"7.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Robust Porter"},
+ {:name=>"Portsmouth Barleywine", :abv=>"11", :foodPairings=>nil, :glassware=>"Tulip", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Premium 219 Pilsner", :abv=>"4.7", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"Purebred A.P.A. Citra", :abv=>"6.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Strong Pale Ale"},
+ {:name=>"Quinn's Amber Ale", :abv=>"4.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Red Between the Lines",
+  :abv=>"6.2",
+  :foodPairings=>"Meat, pasta, cheeses.",
+  :glassware=>"Pint",
+  :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Redbridge", :abv=>"4", :foodPairings=>nil, :glassware=>"Pint", :style=>"Gluten-Free Beer"},
+ {:name=>"Regal Pilsner", :abv=>"7", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"Renee IPA", :abv=>nil, :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Revered Red", :abv=>"5.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Rocket Dog Rye I.P.A", :abv=>"6.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Runway IPA",
+  :abv=>"6.2",
+  :foodPairings=>"Grilled food and salad dishes, strong cheese.",
+  :glassware=>"Pint",
+  :style=>"International-Style Pale Ale"},
+ {:name=>"Rye Hatter",
+  :abv=>"6.12",
+  :foodPairings=>"blue cheese, blackened seafood, herb-roasted poultry",
+  :glassware=>"Pint",
+  :style=>"Light American Wheat Ale or Lager with Yeast"},
+ {:name=>"Sacramento Beer Week Beer", :abv=>"9", :foodPairings=>nil, :glassware=>"Pint", :style=>"Specialty Beer"},
+ {:name=>"Scare City 4 Imperial Wheat Wine",
+  :abv=>"9.7",
+  :foodPairings=>nil,
+  :glassware=>"Snifter",
+  :style=>"American-Style Wheat Wine Ale"},
+ {:name=>"Select 55", :abv=>"4", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Light (Low Calorie) Lager"},
+ {:name=>"Shameless McDale", :abv=>"4.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"Irish-Style Red Ale"},
+ {:name=>"SideCar", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Amber/Red Ale"},
+ {:name=>"Silent Night", :abv=>"11", :foodPairings=>nil, :glassware=>"Tulip", :style=>"Belgian-Style Dark Strong Ale"},
+ {:name=>"Six Grain Harvest Lager (Batch No. 63118)", :abv=>"5.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Sneaky Pete", :abv=>"10", :foodPairings=>nil, :glassware=>"Snifter", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Snow Cone IPA", :abv=>"7", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Southern Hemisphere Harvest", :abv=>"6.7", :foodPairings=>nil, :glassware=>"Flute", :style=>"American-Style Pale Ale"},
+ {:name=>"Spring Heat Spiced Wheat",
+  :abv=>"5.2",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"Belgian-Style White (or Wit) / Belgian-Style Wheat"},
+ {:name=>"Stout", :abv=>"5.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Stout"},
+ {:name=>"Stryker Stout", :abv=>nil, :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Stout"},
+ {:name=>"Sucks", :abv=>"8", :foodPairings=>nil, :glassware=>"Mug", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Summer Ale", :abv=>"4.7", :foodPairings=>nil, :glassware=>"Weizen", :style=>"Light American Wheat Ale or Lager without Yeast"},
+ {:name=>"Summer in Berlin", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Sour Ale"},
+ {:name=>"SummerBright Ale", :abv=>"4.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Golden or Blonde Ale"},
+ {:name=>"Summerfest", :abv=>"5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Lager"},
+ {:name=>"Sundog",
+  :abv=>"4.5",
+  :foodPairings=>"Grilled foods, caramelized onions, tomato sauce and gruyere.",
+  :glassware=>"Pint",
+  :style=>"American-Style Amber/Red Ale"},
+ {:name=>"SweetWater Exodus Porter", :abv=>nil, :foodPairings=>nil, :glassware=>"Pint", :style=>"Brown Porter"},
+ {:name=>"SweetWater Festive Ale", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Herb and Spice Beer"},
+ {:name=>"SweetWater IPA", :abv=>"6.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"SweetWater Mean Joe Bean", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"Robust Porter"},
+ {:name=>"SweetWater Motor Boat", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Ordinary Bitter"},
+ {:name=>"SweetWater Road Trip", :abv=>"5.2", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"SweetWater SchWheat",
+  :abv=>"4.9",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"Light American Wheat Ale or Lager with Yeast"},
+ {:name=>"Take Two Pils", :abv=>"5.5", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"German-Style Pilsener"},
+ {:name=>"Tasmanian Hatter",
+  :abv=>"7",
+  :foodPairings=>"Grilled seafood, unagi and lamb",
+  :glassware=>"Pint",
+  :style=>"American-Style India Pale Ale"},
+ {:name=>"Tater Ridge - Beer Camp Across America", :abv=>"7", :foodPairings=>nil, :glassware=>"Pint", :style=>"Scottish-Style Heavy Ale"},
+ {:name=>"Ten FIDY", :abv=>"10.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Imperial Stout"},
+ {:name=>"Tequiza",
+  :abv=>"4.5",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"Australasian, Latin American or Tropical-Style Light Lager"},
+ {:name=>"Terra Incognita", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Tulip", :style=>"Specialty Beer"},
+ {:name=>"The Carhartt Woodsman",
+  :abv=>"4.4",
+  :foodPairings=>"Burgers, BBQ, and a job well done",
+  :glassware=>"Pint",
+  :style=>"American-Style Pale Ale"},
+ {:name=>"The Hairy Eyeball", :abv=>"8.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Strong Pale Ale"},
+ {:name=>"The Poet",
+  :abv=>"5.2",
+  :foodPairings=>"Mushrooms, beef, blooming, soft-ripened cheeses and chocolate.",
+  :glassware=>"Pint",
+  :style=>"Oatmeal Stout"},
+ {:name=>"There and Back - Beer Camp Across America", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"Ordinary Bitter"},
+ {:name=>"Torpedo Extra IPA", :abv=>"7.2", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Torpedo Pilsner - Beer Camp Across America",
+  :abv=>"5.2",
+  :foodPairings=>nil,
+  :glassware=>"Pilsner",
+  :style=>"American-Style Pilsener"},
+ {:name=>"Trademark Pale Ale", :abv=>"5.7", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Pale Ale"},
+ {:name=>"Tripel  Squared",
+  :abv=>"9",
+  :foodPairings=>"Fish, Lamb any spicy food as it will compliment the spiciness and clear the palate",
+  :glassware=>"Tulip",
+  :style=>"Belgian-Style Tripel"},
+ {:name=>"Tumbler", :abv=>"5.5", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Brown Ale"},
+ {:name=>"Two-One Niner", :abv=>"4.8", :foodPairings=>nil, :glassware=>"Pilsner", :style=>"American-Style Pilsener"},
+ {:name=>"Unfiltered Wheat Beer",
+  :abv=>"4.4",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"Light American Wheat Ale or Lager with Yeast"},
+ {:name=>"Vanilla Porter", :abv=>"5.4", :foodPairings=>nil, :glassware=>"Pint", :style=>"Brown Porter"},
+ {:name=>"Wachusetts IPA", :abv=>"5.6", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"Waldo's Special Ale", :abv=>"11.5", :foodPairings=>nil, :glassware=>"Snifter", :style=>"Imperial or Double India Pale Ale"},
+ {:name=>"Waterkeeper", :abv=>"6", :foodPairings=>nil, :glassware=>"Weizen", :style=>"South German-Style Hefeweizen / Hefeweissbier"},
+ {:name=>"Whiplash", :abv=>"6.3", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style India Pale Ale"},
+ {:name=>"White Hatter", :abv=>"5.5", :foodPairings=>"seafood, fennel, mushrooms", :glassware=>"Pint", :style=>"Belgian-Style Pale Ale"},
+ {:name=>"Wilco Tango Foxtrot", :abv=>"7.8", :foodPairings=>nil, :glassware=>"Pint", :style=>"American-Style Brown Ale"},
+ {:name=>"Winter Haze", :abv=>"8.5", :foodPairings=>nil, :glassware=>"Goblet", :style=>"American-Style Barley Wine Ale"},
+ {:name=>"Yippe Rye Aye!", :abv=>"5.9", :foodPairings=>nil, :glassware=>"Pint", :style=>"Light American Wheat Ale or Lager with Yeast"},
+ {:name=>"Yonder Bock - Beer Camp Across America",
+  :abv=>"7.7",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"German-Style Heller Bock/Maibock"},
+ {:name=>"Yvan The Great - Beer Camp Across America",
+  :abv=>"6.3",
+  :foodPairings=>nil,
+  :glassware=>"Pint",
+  :style=>"Belgian-Style Blonde Ale"}]
+
+# *************** SIMPLIFY STYLES TO SHORTNAMES **********************
+beers.each do |beer_info|
+  if beer_info[:style].include?("Ale")
+    beer_info[:style] = "Ale"
+  elsif beer_info[:style].include?("Stout")
+   beer_info[:style] = "Stout"
+ elsif beer_info[:style].include?("Pilsener")
+   beer_info[:style] = "Pilsener"
+ elsif beer_info[:style].include?("Porter")
+   beer_info[:style] = "Porter"
+ elsif beer_info[:style].include?("Kölsch")
+   beer_info[:style] = "Kölsch"
+ elsif beer_info[:style].include?("Weisse")
+   beer_info[:style] = "Weisse"
+ elsif beer_info[:style].include?("Weizen")
+   beer_info[:style] = "Weizen"
+ elsif beer_info[:style].include?("Weizen")
+   beer_info[:style] = "Weizen"
+ elsif beer_info[:style].include?("Weizenbock")
+   beer_info[:style] = "Weizen"
+ elsif beer_info[:style].include?("Lager")
+   beer_info[:style] = "Lager"
+ elsif beer_info[:style].include?("IPA")
+   beer_info[:style] = "IPA"
+ elsif beer_info[:style].include?("Tripel")
+   beer_info[:style] = "Tripel"
+ else
+   beer_info[:style] = "Ale"
+ end
+  beers
 end
 
-# *************** SORT JSON DATA IN ARRAY FORM - FOR DB SEED DATA **********************
-# *************** FULL DATA (CAN ADD FIELDS AS REQUIRED) **********************
-beer_data = get_all_beers
+# *************** SET ABV VALUE TO FLOAT AND ADD STRENGTH PROPERTY **********************
 
-full_beer_data = []
-beer_data.each do |beer_info|
-  hash = Hash.new
-  if beer_info["name"] && beer_info["abv"] && beer_info["glass"] && beer_info["style"] && beer_info["foodPairings"]
-    hash[:name] = beer_info["name"]
-    hash[:abv] = beer_info["abv"]
-    hash[:foodPairings] = beer_info["foodPairings"]
-    hash[:glasswareId] = beer_info["glass"]["id"]
-    hash[:styleId] = beer_info["style"]["id"]
-    hash[:description] = beer_info["style"]["description"]
-    full_beer_data << hash
-  end
+beers.delete_if do |beer_info|
+  beer_info[:abv] == nil
 end
 
-puts full_beer_data
+beers.each do |beer_info|
+    beer_info[:abv] = beer_info[:abv].to_f
+end
+
+beers.each do |beer_info|
+    if beer_info[:abv] >= 6
+      beer_info[:strength] = "Strong"
+    elsif beer_info[:abv] >= 4
+      beer_info[:strength] = "Medium"
+    else
+      beer_info[:strength] = "Light"
+    end
+end
+
+
+pairings_array = ["aged cheddars, arugula in vinaigrette, portabello stir-fry",
+ "Roasted meats, dried fruits, gruyere and smoked cheese.",
+ "BBQ and red meats, cheeses.",
+ "Charciterie & all things prok!",
+ "Salad with Citrus based dressing, Smokey Barbeque, Tamales, Cilantro-focused Salsa, Smoked Gouda, Spice cake, Sweet carrot cake",
+ "Red meat, smoked foods, balsamic, rich cheese & dark chocolate.",
+ "charcuterie, roasted poultry, grilled stone fruits.",
+ "Caprese Salad, Southern Barbeque, Tamales, Cilantro-Focused Salsas",
+ "seafood, fennel, mushrooms and pickled veggies",
+ "Asian spiced dishes, Steak fajitas, Port-Salut or other lightly tangy cheese, Caramel based desserts",
+ "seafood, corn, veggies and mild white cheeses",
+ "Greek-style grilled chicken, Blackened Catfish, Citrus salad with shaved parmesan and lemon-lime vinaigrette. Aged Monterey Jack, Dry Parmesan, Cotswold. Lemon sorbet with roasted pistachios",
+ "roasted poultry, root vegetables, peanut sauce and caraway",
+ "spicy heat, citrus and aged blue cheese",
+ "Aged cheddars, herb-roasted poultry, vinaigrettes and six o’clock.",
+ "Sharp cheddars, herb-roasted poultry and curry",
+ "Shellfish, spiced cheeses and citrus-laden vinaigrettes.",
+ "Crispy San Diego-style fish tacos, Weisswurst, Cobb Salad\r\n\r\nWhite cheddar, Creamy Bleu, Asiago",
+ "smoked foods, tomatoes and beef",
+ "Sauerbraten and pretzels",
+ "Citrus Salad, Sushi, Grilled Chicken",
+ "Spicy dishes, hard cheeses, greens.",
+ "Caramel and Vanilla based Desserts",
+ "Yes, please.",
+ "Meat, pasta, cheeses.",
+ "Grilled food and salad dishes, strong cheese.",
+ "blue cheese, blackened seafood, herb-roasted poultry",
+ "Grilled foods, caramelized onions, tomato sauce and gruyere.",
+ "Grilled seafood, unagi and lamb",
+ "Burgers, BBQ, and a job well done",
+ "Mushrooms, beef, blooming, soft-ripened cheeses and chocolate.",
+ "Fish, Lamb any spicy food as it will compliment the spiciness and clear the palate",
+ "seafood, fennel, mushrooms"]
+
+complete_beer_data =
+  beers.each do |beer_info|
+    if beer_info[:foodPairings] == nil
+      beer_info[:foodPairings]= pairings_array.sample
+    end
+  end
+
+print complete_beer_data

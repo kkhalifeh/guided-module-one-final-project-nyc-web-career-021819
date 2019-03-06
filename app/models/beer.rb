@@ -1,5 +1,5 @@
 class Beer < ActiveRecord::Base
-
-  has_many :users, through: :favorite
+  has_many :favorites
+  has_many :users, through: :favorites
 
 end
