@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190306151347) do
+ActiveRecord::Schema.define(version: 20190306175922) do
 
   create_table "beers", force: :cascade do |t|
     t.string "name"
@@ -24,13 +24,16 @@ ActiveRecord::Schema.define(version: 20190306151347) do
   create_table "favorites", force: :cascade do |t|
     t.integer "user_id"
     t.integer "beer_id"
-    t.boolean "is_favorite"
-    t.boolean "trying"
+  end
+
+  create_table "preferences", force: :cascade do |t|
+    t.integer "user_id"
+    t.string  "beer_style"
+    t.string  "beer_strength"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
+    t.string "user_name"
   end
 
 end
