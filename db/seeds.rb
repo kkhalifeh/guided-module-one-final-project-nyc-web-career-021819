@@ -7,14 +7,19 @@ beers = Beer.create(
 
 User.destroy_all
 users = User.create([
-  {:first_name => "Rich", :last_name => "Tam"},
-  {:first_name => "Khaled", :last_name =>"Khalifeh"}
+  {:user_name => "richtam"},
+  {:user_name => "khaledkhalifeh"},
+  {:user_name => "user1"},
+  {:user_name => "user2"},
+  {:user_name => "user3"},
+  {:user_name => "user4"},
+  {:user_name => "user5"},
+  {:user_name => "user6"},
+  {:user_name => "user7"},
+  {:user_name => "user8"}
 ])
 
 Favorite.destroy_all
-favorites = Favorite.create([
-  {:user_id => 1, :beer_id => 3},
-  {:user_id => 2, :beer_id => 2},
-  {:user_id => 1, :beer_id => 4},
-  {:user_id => 2, :beer_id => 4}
-])
+favorites = 50.times do Favorite.create ([
+  {:user_id => rand(1..10), :beer_id => rand(270...400)},
+  ]) end
