@@ -12,6 +12,8 @@ def welcome
 end
 
 def get_username
+  #method to check if username exists in data base
+  # if it doesnt, create it a new user
   puts "Please enter your user name"
   gets.chomp.downcase
   sleep(1)
@@ -33,7 +35,7 @@ def favorite_beers
   #below where it says puts, pull data
   puts "Your favorites list:"
   puts "Use 0-9 to make your selection"
-  puts "(0)  Beer A" #favorites_by_user[0]
+  puts "(0)  Beer A" #favorites_by_user[0] << something like this
   puts "(1)  Beer B"
   puts "(2)  Beer C"
   puts "(3)  Beer D"
@@ -47,6 +49,7 @@ def favorite_beers
   $user_input_from_favorite_beers = gets.chomp.to_i
   puts $user_input_from_favorite_beers
     if $user_input_from_favorite_beers == 9
+      #another variable to store beer ID based on user input ?
       main_menu
     else
       puts "CURRENT BEER SELECTION #{$user_input_from_selected_beer}" #code should take user_input_from_favorite_beers and display beername dynamically
@@ -64,25 +67,25 @@ def favorite_beers
       end
     end
 
-def rate_beer
-  puts "How would you like to rate this beer?"
-  puts "Please input a number from 0-5:"
-    beer_rating = gets.chomp
-  puts ""
-  puts "We're updating BEER NUMBER:#{$user_input_from_favorite_beers} rating to #{beer_rating}"
-    #execute method to update our user_favorite instance of this beer
-  puts "Hang tight! We're updating rating for this beer..."
-  puts ""
-  sleep(1)
-  puts "Boop..boop..bee..dooo"
-  sleep(2)
-  puts ""
-  puts "Returning to main menu..."
-  sleep(1)
-  puts ""
-  puts ""
-  main_menu #return to main menu
-end
+# def rate_beer
+#   puts "How would you like to rate this beer?"
+#   puts "Please input a number from 0-5:"
+#     beer_rating = gets.chomp
+#   puts ""
+#   puts "We're updating BEER NUMBER:#{$user_input_from_favorite_beers} rating to #{beer_rating}"
+#     #execute method to update our user_favorite instance of this beer
+#   puts "Hang tight! We're updating rating for this beer..."
+#   puts ""
+#   sleep(1)
+#   puts "Boop..boop..bee..dooo"
+#   sleep(2)
+#   puts ""
+#   puts "Returning to main menu..."
+#   sleep(1)
+#   puts ""
+#   puts ""
+#   main_menu #return to main menu
+# end
 
 def pairing_info
   puts "Here's the pairing information for BEER NUMBA: #{$user_input_from_favorite_beers}"
@@ -95,6 +98,7 @@ def pairing_info
 end
 
 def remove_from_favorite
+  #remove object from favorite_table
   sleep(1)
   puts "Hang on...we are destroying this beer from your favorites"
   puts " BEER Number: #{$user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
@@ -139,7 +143,7 @@ end
 
 def beer_type_menu
   beer_type_array = ["Blone Ales", "Ales", "IPAs", "Stouts", "Saisons"]
-  puts "Your current selections: Blonde Ale, Stouts" #show favorites.beertype by userID
+  puts "Your current selections: Blonde Ale, Stouts" #method display preference_join_table beer type by userID
   puts "What types of beers would you like to add to your preferences?"
   puts "(0) Blonde Ales"
   puts "(1) Ales"
@@ -151,7 +155,7 @@ def beer_type_menu
 
   if add_to_pref == 5
     main_menu
-  else #execute method to create favorite instance
+  else #execute method to create preference, add new entry to preference_table by USER ID , take input
     puts "Executing code to update preference with #{add_to_pref}"
     puts "Your preference has been saved. Please hit 1 to return to main menu"
     gets.chomp
@@ -161,7 +165,7 @@ end
 
 def abv_menu
   abv_array = ["Light", "Medium", "Strong"]
-  puts "Your current selections: Light, Medium" #show favorites.beertype by userID
+  puts "Your current selections: Light, Medium" #show favorites. by userID, pull from preference-table
   puts "What types of beers would you like to add to your preferences?"
   puts "(0) Light 0.1% - 3.9% abv"
   puts "(1) Medium 3.90 - 5.9% abv"
@@ -170,7 +174,7 @@ def abv_menu
   add_to_pref = gets.chomp.to_i #this basically will store the index
   if add_to_pref == 5
     main_menu
-  else #execute method to create favorite instance
+  else #execute method to create preference instance in preference_table
     puts "Executing code to update preference with #{add_to_pref}"
     puts "Your preference has been saved. Please hit 1 to return to main menu"
     gets.chomp
@@ -195,7 +199,7 @@ def discover_beers_menu
 end
 
 def most_popular_beers
-  #method to search favorites_table for most common
+  #method to search favorites_table for most favorite
   puts "Here are the top beers added by BeerBud users!"
   puts "Select 0-9 to add to your favorites or return to main_menu"
   puts "        Name    |     Type      |   ABV       |  Num Times Fav. "
@@ -273,7 +277,7 @@ def beer_recommendations
   puts "Here are some beers we think you'd like. Select 0-9 to add to your favorite or return to menu"
   puts "        Name    |     Type      |   ABV    "
   puts "     ---------- | ------------  | ---------"
-  puts "(0)  Beer A     |     IPA       | 5.4%     "  #code should pull from User's preference_join_table each puts line should equal to array index?
+  puts "(0)  Beer A     |     IPA       | 5.4%     "  #code should pull from User's preference_join_table to look for abv and style pref.; Then return beers that match preference
   puts "(1)  Beer B     |     IPA       | 5.4%     "
   puts "(2)  Beer C     |     IPA       | 5.4%     "
   puts "(3)  Beer D     |     IPA       | 5.4%     "
