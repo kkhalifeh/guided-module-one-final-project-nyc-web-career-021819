@@ -1,9 +1,24 @@
-# `class BeerBud`
+class BeerBud
 
+attr_reader :current_user
 #defining global variables
 
 $user_input_from_favorite_beers = nil
 $user_main_menu_input = nil
+
+def run
+  welcome
+  user_name = get_username
+  #user name is returned downcase
+  # User .find_by("name) to evaluate if new or returning user
+  #assuming returning user
+
+
+  main_menu
+  loop do
+    change_menu($user_main_menu_input)
+  end
+end
 
 
 def welcome
@@ -15,7 +30,9 @@ def get_username
   #method to check if username exists in data base
   # if it doesnt, create it a new user
   puts "Please enter your user name"
-  gets.chomp.downcase
+  name = gets.chomp.downcase
+
+  @current_user = User.find_or_create_by(user_name: name)
   sleep(1)
 end
 
@@ -328,4 +345,6 @@ def change_menu(user_main_menu_input)
     puts "3. Discover new beers"
     puts "4. Close program and drink"
   end
+end
+
 end
