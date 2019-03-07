@@ -117,7 +117,15 @@ end
     #pull data from join_table :favorites, puts beer.name from array []
     #limit to 8 selections
     #below where it says puts, pull data
+    # binding.pry
     favorite_list_array = self.current_user.favorites
+    if favorite_list_array == []
+      puts "You have not selected any favorites!"
+      puts "Hit 1 to return to main menu when you're ready"
+      gets.chomp
+      sleep(1)
+      main_menu_loop
+    else
     puts "Your favorites list:"
     puts "Use 0-#{favorite_list_array.length} to make your selection"
     fav_list = favorite_list_array.each_with_index do |beer, index|
@@ -125,11 +133,12 @@ end
     end
     puts "(#{fav_list.length}) Return to main menu"
     @user_input_from_favorite_beers = gets.chomp.to_i
-    @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
+    # binding.pry
     puts user_input_from_favorite_beers
       if user_input_from_favorite_beers == fav_list.length
         main_menu_loop
       else
+        @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
         puts "CURRENT BEER SELECTION: #{selected_fav_beer.name}"
         selected_beer_menu
         @user_input_from_selected_beer = gets.chomp.to_i
@@ -141,12 +150,13 @@ end
             remove_from_favorite #method to destroy favorite object from :favorite_table
         else
           main_menu_loop
+        end
       end
     end
   end
 
   def pairing_info
-    puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers}"
+    puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers} (#{selected_fav_beer})"
     # binding.pry
     pairings = selected_fav_beer.foodPairings
     glassware = selected_fav_beer.glassware
@@ -161,22 +171,33 @@ end
   end
 
   def remove_from_favorite
-    binding.pry
+    # binding.pry
+    # favorite_list_array = self.current_user.favorites
+    # i = favorite_list_array.length
+    favorite_list_array = self.current_user.favorites
     sleep(1)
     puts "Hang on...we are destroying this beer from your favorites"
-    puts " BEER Number: #{$user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
+    puts " BEER Number: #{user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
     sleep(1)
     puts ""
     puts ""
-    puts "(★▼▼)o┳*-- BEER NUMBA #{$user_input_from_favorite_beers}"
+    puts "(★▼▼)o┳*-- BEER NUMBA #{user_input_from_favorite_beers}"
     sleep(1)
+    Favorite.find_by(user_id: self.current_user.id, beer_id: selected_fav_beer.id).destroy
+    favorite_list_array = favorite_list_array.select {|fav_item| fav_item.beer_id != self.selected_fav_beer.id}
+    # binding.pry
     puts ""
     puts ""
     puts "It is done. Press 1 to return to main menu"
     gets.chomp
-    main_menu
+    main_menu_loop
     puts ""
   end
+
+  # def remove_fav_object
+  #   favorite_list_array = self.current_user.favorites
+  #   favorite_list_array = favorite_list_array.select {|fav_item| fav_item.beer_id != self.selected_fav_beer.id}
+  # end
 
   def selected_beer_menu
 
@@ -371,7 +392,6 @@ end
 
   # fav_list = favorite_list_array.each_with_index do |beer, index|
   #   puts "(#{index}) #{beer.beer.name}"
-
   def beer_recommendations
     @user_prefs_strength = user_beer_strength_preferences
     beer_style_match = []
@@ -389,10 +409,10 @@ end
         end
       end
     end
-    puts final_beer_selection
-    binding.pry
-
-
+    final_beer_selection.uniq
+    if final_beer_selection.length > 15
+      final_beer_selection = final_beer_selection.first(15)
+    end
     #add all beers that match strength preference
 
     # user_beer_strength_preferences.each do |strength_pref|
@@ -414,10 +434,10 @@ end
     sleep(1)
     puts "..."
     sleep(1)
-    puts "Here are some beers we think you'd like. Select 0-9 to add to your favorite or return to menu"
-    rec_list = beer_match.flatten.first(15).each_with_index do |beer, index|
+    puts "Here are some beers we think you'd like. Select 0-#{final_beer_selection.length - 1} to add to your favorites or #{final_beer_selection.length} to return to menu"
+    rec_list = final_beer_selection.each_with_index do |beer, index|
 
-      puts "(#{index}) | Name: #{beer.name} | ABV: #{beer.abv})"
+      puts "(#{index})  | Name: #{beer.name} | ABV: #{beer.abv})"
     end
 
 
@@ -434,8 +454,10 @@ end
     # puts "(6)  Beer G     |     IPA       | 5.4%     "
     # puts "(7)  Beer H     |     IPA       | 5.4%     "
     # puts "(8)  Beer I     |     IPA       | 5.4%     "
-    puts "(#{beer_match.flatten.first(15).length})  Return to main menu"
+    puts "(#{final_beer_selection.length})  Return to main menu"
     favorite_selection = gets.chomp.to_i
+    # binding.pry
+    Favorite.create(user_id: self.current_user.id, beer_id: final_beer_selection[favorite_selection].id)
     #method to create favorite instance
     puts "We're adding BEER NUMBAAA #{favorite_selection} to your favorites list"
     #if max 8 put, sorry you've already reached your limit of favorites. Please remove 1 from your list while we learn more about coding.
