@@ -1,7 +1,7 @@
 require 'pry'
 class BeerBud
 
-attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beers, :user_input_from_selected_beer, :selected_fav_beer
+attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beers, :user_input_from_selected_beer, :selected_fav_beer, :user_prefs_strength
 #defining global variables
 
 # $user_input_from_favorite_beers = nil
@@ -307,14 +307,23 @@ end
   #   puts "(#{index}) #{beer.beer.name}"
 
   def beer_recommendations
-
-
+    @user_prefs_strength = user_beer_strength_preferences
     beer_style_match = []
     beer_style_and_strength_match = []
     #add all beers to array by style_preference
     user_beer_style_preferences.each do |style_pref|
       beer_style_match << Beer.where(style: style_pref) #need to iterate through Beer.where(style: style_pref and shovel each beer instance into beermatch)
     end
+    # binding.pry
+    final_beer_selection = []
+    beer_style_match.flatten.select do |beer|
+        self.user_prefs_strength.each do |pref|
+        if beer.strength == pref
+          final_beer_selection << beer
+        end
+      end
+    end
+    puts final_beer_selection
     binding.pry
 
 
