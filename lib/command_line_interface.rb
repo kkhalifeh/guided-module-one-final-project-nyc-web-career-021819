@@ -436,7 +436,7 @@ end
       main_menu_loop
     end
     # binding.pry
-    Favorite.create(user_id: self.current_user.id, beer_id: top10[popular_selection])
+    Favorite.find_or_create_by(user_id: self.current_user.id, beer_id: top10[popular_selection])
     puts "We're adding BEER NUMBAAA #{popular_selection} to your favorites list"
 
     puts "It is done."
