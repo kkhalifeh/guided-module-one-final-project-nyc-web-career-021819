@@ -173,11 +173,13 @@ end
       puts "(#{index}) #{beer.beer.name}"
     end
     puts "(#{fav_list.length}) Return to main menu"
+    sleep(1)
     @user_input_from_favorite_beers = gets.chomp.to_i
     puts user_input_from_favorite_beers
       if user_input_from_favorite_beers == fav_list.length
         main_menu_loop
       else
+        sleep(1)
         @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
         puts "CURRENT BEER SELECTION: #{selected_fav_beer.name}"
         selected_beer_menu
@@ -189,6 +191,7 @@ end
           elsif user_input_from_selected_beer == 2
             remove_from_favorite #method to destroy favorite object from :favorite_table
         else
+          sleep(1)
           main_menu_loop
         end
       end
@@ -196,6 +199,7 @@ end
   end
 
   def pairing_info
+    sleep(1)
     puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers} (#{selected_fav_beer.name})"
     pairings = selected_fav_beer.foodPairings
     glassware = selected_fav_beer.glassware
@@ -335,92 +339,6 @@ end
     end
   end
 
-
-  # def most_popular_beers
-  #   #method to search favorites_table for most favorite
-  #   puts "Here are the top beers added by BeerBud users!"
-  #   puts "Select 0-9 to add to your favorites or return to main_menu"
-  #   puts "        Name    |     Type      |   ABV       |  Num Times Fav. "
-  #   puts "     ---------- | ------------  | ----------- | --------------- "
-  #   puts "(0)  Beer A     |     IPA       | 5.4%        |   13,521        "                    #code should pull preference_join_table each puts line should equal to array index?
-  #   puts "(1)  Beer B     |     IPA       | 5.4%        |   12,323        "
-  #   puts "(2)  Beer C     |     IPA       | 5.4%        |   8,201         "
-  #   puts "(3)  Beer D     |     IPA       | 5.4%        |   7,000         "
-  #   puts "(4)  Beer E     |     IPA       | 5.4%        |   5,000         "
-  #   puts "(5)  Beer F     |     IPA       | 5.4%        |   2,000         "
-  #   puts "(6)  Beer G     |     IPA       | 5.4%        |   1,000         "
-  #   puts "(7)  Beer H     |     IPA       | 5.4%        |   1,000         "
-  #   puts "(8)  Beer I     |     IPA       | 5.4%        |    5            "
-  #   puts "     -----------------------------------------------------------"
-  #   puts "(9)  return to main menu"
-  #   user_input_from_popular_beers = gets.chomp.to_i
-  #     if user_input_from_popular_beers == 9
-  #       main_menu
-  #     else
-  #       #call method to add beer to favorite, add by array?
-  #       puts "Hang on we're adding beer NUMBAAA #{user_input_from_popular_beers} to your fav."
-  #       sleep(1)
-  #       puts "It is done."                                                                     
-  #       sleep(1)
-  #       puts "(1) to return to main_menu"
-  #       puts "(2) add another beer to favorites"
-  #       user_input = gets.chomp.to_i
-  #         if user_input == 1
-  #           main_menu
-  #         else
-  #         most_popular_beers
-  #         end
-  #     end
-  #   end
-
-
-
-
-  # def most_popular_type
-  #   #method to search favorites_table for most common
-  #   puts "Here are the top beers added by BeerBud users!"
-  #   puts "select 0-9 to add to your favorites or return to main_menu"
-  #   puts "        Name    |     Type      |   ABV       |  Num Times Fav. "
-  #   puts "     ---------- | ------------  | ----------- | --------------- "
-  #   puts "(0)  Beer A     |     IPA       | 5.4%        |   13,521        "                    #code should pull from User's preference_join_table each puts line should equal to array index?
-  #   puts "(1)  Beer B     |     IPA       | 5.4%        |   12,323        "
-  #   puts "(2)  Beer C     |     IPA       | 5.4%        |   8,201         "
-  #   puts "(3)  Beer D     |     IPA       | 5.4%        |   7,000         "
-  #   puts "(4)  Beer E     |     IPA       | 5.4%        |   5,000         "
-  #   puts "(5)  Beer F     |     IPA       | 5.4%        |   2,000         "
-  #   puts "(6)  Beer G     |     IPA       | 5.4%        |   1,000         "
-  #   puts "(7)  Beer H     |     IPA       | 5.4%        |   1,000         "
-  #   puts "(8)  Beer I     |     IPA       | 5.4%        |    5            "
-  #   puts "     -----------------------------------------------------------"
-  #   puts "(9)  return to main menu"
-  #   puts "We're adding BEER NUMBAAA #{favorite_selection} to your favorites list"
-  #   #if max 8 put, sorry you've already reached your limit of favorites. Please remove 1 from your list while we learn more about coding.
-  #   puts "It is done."
-  #   puts "(1) to return to main_menu"
-  #   puts "(2) to return to beer recommendations"
-  #   user_input = gets.chomp.to_i
-  #   if user_input == 1
-  #     main_menu
-  #   else
-  #     most_popular_type
-  #   end
-  # end
-
-  # puts "Your favorites list:"
-  # puts "Use 0-#{favorite_list_array.length} to make your selection"
-  # fav_list = favorite_list_array.each_with_index do |beer, index|
-  #   puts "(#{index}) #{beer.beer.name}"
-  # end
-  # puts "(#{fav_list.length}) Return to main menu"
-  # @user_input_from_favorite_beers = gets.chomp.to_i
-  # @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
-  # puts user_input_from_favorite_beers
-  #   if user_input_from_favorite_beers == fav_list.length
-  #     main_menu_loop
-  #   else
-
-  # fav_list = favorite_list_array.each_with_index do |beer, index|
-  #   puts "(#{index}) #{beer.beer.name}"
   def most_popular_beers
     puts "Here are the top beers added by BeerBud users!"
     most_popular = Favorite.group('beer_id').order('count_all DESC').count
@@ -471,10 +389,7 @@ end
     if final_beer_selection.length > 15
       final_beer_selection = final_beer_selection.first(15)
     end
-    #mvp - list 9 beers from join table
-    #stretch - add next/previous pagination option
     puts "Hooooold on tight! We're Searching for beers based on your preferences"
-
     sleep(1)
     puts "..."
     sleep(1)
@@ -501,37 +416,79 @@ end
         main_menu
       else
         beer_recommendations
-      end
-
-    # beer_recommendations
-    # gets.chomp
+    end
   end
 
   def change_menu(user_main_menu_input)
     sleep(1)
     if @user_main_menu_input == 1
       favorite_beers #execute favorite beers method
-    elsif @user_main_menu_input == 2
-      beer_preferences #executes #beer_preferences method
-    elsif @user_main_menu_input == 3
-      puts discover_beers_menu #execute discover_beers_menu method
-    elsif @user_main_menu_input == 4
-      puts "(●´▽｀●)_旦”☆”旦_(○´ー｀○)"
-      sleep(1)
-      puts "Byeeee and enjoy your drink!"
-      sleep(1)
-      exit!
-    else
-    # else
-    #   sleep(1)
-    #   puts "Had a bit of drink eh? Please select a valid input (1-4)"
-    #   sleep(1)
-    #   puts "(1) View my favorites"
-    #   puts "(2) Access beer preferences"
-    #   puts "(3) Discover new beers"
-    #   puts "(4) Close program and drink"
-    # end
-  end
+      elsif @user_main_menu_input == 2
+        beer_preferences #executes #beer_preferences method
+      elsif @user_main_menu_input == 3
+        puts discover_beers_menu #execute discover_beers_menu method
+      elsif @user_main_menu_input == 4
+        puts "(●´▽｀●)_旦”☆”旦_(○´ー｀○)"
+        sleep(1)
+        puts "Byeeee and enjoy your drink!"
+        sleep(1)
+        exit!
+      else
+    end
   end
 
+  def rate_beer
+    if Rating.find_by(beer_id: selected_fav_beer.id, user_id:current_user.id) == nil
+      puts "Rate this beer out of 10"
+      user_rating = gets.chomp.to_i
+      # binding.pry
+      Rating.create(beer_id: selected_fav_beer.id, beer_rating: user_rating, user_id: current_user.id)
+      puts "You just rated #{selected_fav_beer.name} #{user_rating}/10!!!!!"
+      number_of_ratings = Rating.where(beer_id: selected_fav_beer.id).size
+      average_rating = Rating.where(beer_id: selected_fav_beer.id).sum(:beer_rating) / number_of_ratings
+
+      sleep(1)
+      puts "This beer has been rated #{number_of_ratings} times!"
+      puts "Average rating: #{average_rating}"
+
+      puts "(1) to return to main menu"
+      puts "(2) to return to most favorite beers"
+      user_input = gets.chomp.to_i
+      if user_input == 1
+        main_menu
+      else
+        favorite_beers
+      end
+    else
+      change_ratings
+    end
+  end
+
+  def change_ratings
+    found_beer = Rating.find_by(beer_id: selected_fav_beer.id, user_id:current_user.id)
+    sleep(1)
+    puts "You have already rated this beer #{found_beer.beer_rating}/10!"
+    puts "(1) to update your rating"
+    puts "(2) to return to most favorite beers"
+    user_input = gets.chomp.to_i
+    if user_input == 1
+      puts "What is your new rating?"
+      new_rating = gets.chomp.to_i
+      Rating.update(found_beer.id, beer_rating: new_rating)
+      sleep(1)
+      puts "You just rated #{selected_fav_beer.name} #{new_rating}/10!!!!!"
+
+      puts "(1) to return to main menu"
+      puts "(2) to return to most favorite beers"
+      user_input = gets.chomp.to_i
+      sleep(1)
+      if user_input == 1
+        main_menu
+      else
+        favorite_beers
+      end
+    else
+      favorite_beers
+    end
+  end
 end
