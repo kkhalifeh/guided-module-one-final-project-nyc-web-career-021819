@@ -6,27 +6,32 @@ attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beer
 attr_accessor :favorite_list_array
 
 
-def run
-  welcome
-  get_username
-  main_menu_loop
-end
-
-def main_menu_loop
-  main_menu
-  loop do
-    change_menu(user_main_menu_input)
+  def run
+    welcome
+    get_username
+    main_menu_loop
   end
-end
+
+  def main_menu_loop
+    main_menu
+    loop do
+      change_menu(user_main_menu_input)
+    end
+  end
+
+  def put_yellow_line
+    puts "-------------------------------------------------------------".bold.yellow
+  end
 
 
-def welcome
- puts "-------------------------------------------------------------".bold.yellow
-  a = Artii::Base.new :font => 'slant'
- puts a.asciify('BeerBud!').colorize(:red)
- puts "-------------------------------------------------------------".bold.yellow
-  puts "Welcome to BeerBud!"
-end
+
+  def welcome
+   puts "-------------------------------------------------------------".bold.yellow
+    a = Artii::Base.new :font => 'slant'
+   puts a.asciify('BeerBud!').colorize(:red)
+   puts "-------------------------------------------------------------".bold.yellow
+    puts "Welcome to BeerBud!"
+  end
 
 
   def get_username
@@ -89,7 +94,7 @@ end
     puts "-------------------------------------------------------------".bold.yellow
     user_input = gets.chomp.to_i
     until user_input == 1 || user_input == 2
-      string_arr = ["Had a bit of drink eh? Please select (1) or (2)", "Seriously, please select (1) or (2)", "Put your drink down and gently press (1) or (2)", "We can go all day. (1) or (2)", "No seriously, you can't beat our loop. Please select (1) or (2)", "Ah fine, you win. SIKE. Please select (1) or (2)"]
+      string_arr = ["Had a bit of drink eh? Please select (1) - (10)", "Seriously, please select (1) - (10)", "Put your drink down and gently press (1) - (10)", "We can go all day. (1) - (10)", "No seriously, you can't beat our loop. Please select (1) - (10)", "Ah fine, you win. SIKE. Please select (1) - (10)"]
       sleep (1)
       puts "#{string_arr.sample}".red
       puts "-------------------------------------------------------------".bold.yellow
@@ -129,7 +134,7 @@ end
       user_input = gets.chomp.to_i
       until user_input == 1 || user_input == 2
         sleep(1)
-        string_arr = ["Had a bit of drink eh? Please select (1) or (2)", "Seriously, please select (1) or (2)", "Put your drink down and gently press (1) or (2)", "We can go all day. (1) or (2)", "No seriously, you can't beat our loop. Please select (1) or (2)", "Ah fine, you win. SIKE. Please select (1) or (2)"]
+        string_arr = ["Had a bit of drink eh? Please select (1) - (10)", "Seriously, please select (1) - (10)", "Put your drink down and gently press (1) - (10)", "We can go all day. (1) - (10)", "No seriously, you can't beat our loop. Please select (1) - (10)", "Ah fine, you win. SIKE. Please select (1) - (10)"]
         puts "#{string_arr.sample}".red
         puts "-------------------------------------------------------------".bold.yellow
         puts "(1) to select more styles."
@@ -155,24 +160,41 @@ end
     puts "(4) Close program and drink"
     puts "-------------------------------------------------------------".bold.yellow
     @user_main_menu_input = gets.chomp.to_i
+    until @user_main_menu_input == 1 || @user_main_menu_input == 2 || @user_main_menu_input == 3 || @user_main_menu_input == 4
+      string_arr = ["Had a bit of drink eh? Please select (1) - (4)", "Seriously, please select (1) - (4)", "Put your drink down and gently press (1) - (4)", "We can go all day. (1) - (4) please", "No seriously, you can't beat our loop. Please select (1) - (4)", "Ah fine, you win. SIKE. Please select (1) - (4)"]
+      sleep (1)
+      puts "#{string_arr.sample}".red
+      puts "-------------------------------------------------------------".bold.yellow
+      puts "(1) View my favorites"
+      puts "(2) Access beer preferences"
+      puts "(3) Discover new beers"
+      puts "(4) Close program and drink"
+      puts "-------------------------------------------------------------".bold.yellow
+      @user_main_menu_input = gets.chomp.to_i
+    end
   end
+
+
+
 
   def favorite_beers
     self.current_user.favorites.reload
     @favorite_list_array = self.current_user.favorites
     if favorite_list_array == []
-      puts "You have not selected any favorites!"
-      puts "Hit 1 to return to main menu when you're ready"
+      puts "You have not selected any favorites!".red
+      puts "Hit any key to return to main menu when you're ready".red
       gets.chomp
       sleep(1)
       main_menu_loop
     else
-    puts "Your favorites list:"
-    puts "Use 0-#{favorite_list_array.length} to make your selection"
+    puts "Your favorites list:".red
+    puts "Use 0-#{favorite_list_array.length} to make your selection".red
+    puts "-------------------------------------------------------------".bold.yellow
     fav_list = favorite_list_array.each_with_index do |beer, index|
       puts "(#{index}) #{beer.beer.name}"
     end
     puts "(#{fav_list.length}) Return to main menu"
+    puts "-------------------------------------------------------------".bold.yellow
     @user_input_from_favorite_beers = gets.chomp.to_i
     puts user_input_from_favorite_beers
       if user_input_from_favorite_beers == fav_list.length
@@ -239,15 +261,28 @@ end
   end
 
   def beer_preferences
-    puts "You have preferences, we have storage."
-    puts "Please select preference settings to update:"
-    puts "(0) Beer type"
-    puts "(1) ABV % preference"
-    puts "(2) Return to main menu"
+    puts "You have preferences, we have storage.".red
+    puts "What would oyu like to update?:".red
+    puts "-------------------------------------------------------------".bold.yellow
+    puts "(1) Beer type preferences"
+    puts "(2) ABV % preferences"
+    puts "(3) Return to main menu"
+    puts "-------------------------------------------------------------".bold.yellow
     user_input = gets.chomp.to_i
-    if user_input == 0
+    until user_input == 1 || user_input == 2
+      string_arr = ["Had a bit of drink eh? Please select (1) - (3)", "Seriously, please select (1) - (3)", "Put your drink down and gently press (1) - (3)", "We can go all day. (1) - (3)", "No seriously, you can't beat our loop. Please select (1) - (3)", "Ah fine, you win. SIKE. Please select (1) - (3)"]
+      sleep (1)
+      puts "#{string_arr.sample}".red
+      puts "-------------------------------------------------------------".bold.yellow
+      puts "(0) Beer type"
+      puts "(1) ABV % preference"
+      puts "(2) Return to main menu"
+      puts "-------------------------------------------------------------".bold.yellow
+      user_input = gets.chomp.to_i
+    end
+    if user_input == 1
       beer_type_menu
-    elsif user_input == 1
+    elsif user_input == 2
       abv_menu
     else
       main_menu
@@ -266,9 +301,12 @@ end
   def beer_type_menu
     beer_type_array = ["Pilsener", "Ale", "Tripel", "Lager", "Porter", "Stout"," Kölsch", "Weisse"]
     puts ""
-    puts "Your current preferences are #{user_beer_style_preferences}."
+    puts "-------------------------------------------------------------".bold.yellow
+    puts "Your current preferences are #{user_beer_style_preferences}.".red
+    puts "-------------------------------------------------------------".bold.yellow
     puts ""
     puts "What types of beers would you like to add to your preferences?"
+    puts "-------------------------------------------------------------".bold.yellow
     puts "(0) Pilsener"
     puts "(1) Ale"
     puts "(2) Tripel"
@@ -278,8 +316,25 @@ end
     puts "(6) Kölsch"
     puts "(7) Weisse"
     puts "(8) Return to main menu"
+    puts "-------------------------------------------------------------".bold.yellow
     add_to_pref = gets.chomp.to_i #this basically will store the index
-
+    until add_to_pref.between?(1,8)
+      string_arr = ["Had a bit of drink eh? Please select (1) - (8)", "Seriously, please select (1) - (8)", "Put your drink down and gently press (1) - (8)", "We can go all day. (1) - (8)", "No seriously, you can't beat our loop. Please select (1) - (8)", "Ah fine, you win. SIKE. Please select (1) - (8)"]
+      sleep (1)
+      puts "#{string_arr.sample}".red
+      puts "-------------------------------------------------------------".bold.yellow
+      puts "(0) Pilsener"
+      puts "(1) Ale"
+      puts "(2) Tripel"
+      puts "(3) Lager"
+      puts "(4) Porter"
+      puts "(5) Stout"
+      puts "(6) Kölsch"
+      puts "(7) Weisse"
+      puts "(8) Return to main menu"
+      puts "-------------------------------------------------------------".bold.yellow
+      add_to_pref = gets.chomp.to_i
+    end
     if add_to_pref == 8
       main_menu
     else
@@ -300,14 +355,28 @@ end
 
   def abv_menu
     beer_strength_array = ["Light", "Medium", "Strong"]
+    puts "-------------------------------------------------------------".bold.yellow
     puts "Your current selections: #{user_beer_strength_preferences}"
+    puts "-------------------------------------------------------------".bold.yellow
     puts "What types of beers would you like to add to your preferences?"
-    puts "(0) Light 0.1% - 3.9% abv"
-    puts "(1) Medium 3.90 - 5.9% abv"
-    puts "(2) Strong 6% + abv"
-    puts "(3) Return to main menu"
-    add_to_pref = gets.chomp.to_i
-    if add_to_pref == 3
+    puts "(1) Light 0.1% - 3.9% abv"
+    puts "(2) Medium 3.90 - 5.9% abv"
+    puts "(3) Strong 6% + abv"
+    puts "(4) Return to main menu"
+    user_input = gets.chomp.to_i
+      until user_input.betweem?(1-4)
+        sleep(1)
+        string_arr = ["Had a bit of drink eh? Please select (1) - (10)", "Seriously, please select (1) - (10)", "Put your drink down and gently press (1) - (10)", "We can go all day. (1) - (10)", "No seriously, you can't beat our loop. Please select (1) - (10)", "Ah fine, you win. SIKE. Please select (1) - (10)"]
+        puts "#{string_arr.sample}".red
+        puts "-------------------------------------------------------------".bold.yellow
+        puts "(1) Light 0.1% - 3.9% abv"
+        puts "(2) Medium 3.90 - 5.9% abv"
+        puts "(3) Strong 6% + abv"
+        puts "(4) Return to main menu"
+        puts "-------------------------------------------------------------".bold.yellow
+        user_input = gets.chomp.to_i
+      end
+    if add_to_pref == 4
       main_menu_loop
     else
       Preference.find_or_create_by(user_id: self.current_user.id, beer_strength: beer_strength_array[add_to_pref])
@@ -319,16 +388,30 @@ end
     end
   end
 
+
   def discover_beers_menu
-    puts "How would you like to discover?"
-    puts "Please select 0-9"
-    puts "(0) Search by most popular beers"
-    puts "(1) See recommendations based on my preferences"
-    puts "(2) Return to main menu"
+    puts "How would you like to discover?".red
+    puts "Please select (1) - (3)".red
+    puts "-------------------------------------------------------------".bold.yellow
+    puts "(1) Search by most popular beers"
+    puts "(2) See recommendations based on my preferences"
+    puts "(3) Return to main menu"
+    puts "-------------------------------------------------------------".bold.yellow
     user_input = gets.chomp.to_i
-    if user_input == 0
+      until user_input == 1 || user_input == 2
+        string_arr = ["Had a bit of drink eh? Please select (1) - (3)", "Seriously, please select (1) - (3)", "Put your drink down and gently press (1) - (3)", "We can go all day. (1) - (3)", "No seriously, you can't beat our loop. Please select (1) - (3)", "Ah fine, you win. SIKE. Please select (1) - (3)"]
+        sleep (1)
+        puts "#{string_arr.sample}".red
+        puts "-------------------------------------------------------------".bold.yellow
+        puts "(1) Search by most popular beers"
+        puts "(2) See recommendations based on my preferences"
+        puts "(3) Return to main menu"
+        puts "-------------------------------------------------------------".bold.yellow
+        user_input = gets.chomp.to_i
+      end
+    if user_input == 1
       most_popular_beers
-    elsif user_input == 1
+    elsif user_input == 2
     beer_recommendations
     else
       main_menu
@@ -422,32 +505,59 @@ end
   # fav_list = favorite_list_array.each_with_index do |beer, index|
   #   puts "(#{index}) #{beer.beer.name}"
   def most_popular_beers
-    puts "Here are the top beers added by BeerBud users!"
+    puts "Here are the top beers added by BeerBud users!".red
     most_popular = Favorite.group('beer_id').order('count_all DESC').count
     most_popular = most_popular.keys
     top10 = most_popular.first(10)
-    puts "Select 0-#{top10.length - 1} to add to your favorites or #{top10.length} to return to menu"
+    puts "Select 0-#{top10.length - 1} to add to your favorites or #{top10.length} to return to menu".red
+    put_yellow_line
       top10.each_with_index do |beer,index|
       puts "(#{index})  | Name: #{Beer.find(beer).name} | ABV: #{Beer.find(beer).abv})"
-    end
+      end
     puts "(#{top10.length})  Return to main menu"
+    put_yellow_line
     popular_selection = gets.chomp.to_i
+
+      until popular_selection.between?(1,10)
+        sleep(1)
+        string_arr = ["Had a bit of drink eh? Please select (1) - (10)", "Seriously, please select (1) - (10)", "Put your drink down and gently press (1) - (10)", "We can go all day. (1) - (10)", "No seriously, you can't beat our loop. Please select (1) - (10)", "Ah fine, you win. SIKE. Please select (1) - (10)"]
+        puts "#{string_arr.sample}".red
+        puts "-------------------------------------------------------------".bold.yellow
+        puts "Select 0-#{top10.length - 1} to add to your favorites or #{top10.length} to return to menu".red
+        put_yellow_line
+          top10.each_with_index do |beer,index|
+          puts "(#{index})  | Name: #{Beer.find(beer).name} | ABV: #{Beer.find(beer).abv})"
+          end
+        puts "(#{top10.length})  Return to main menu"
+        puts "-------------------------------------------------------------".bold.yellow
+        popular_selection = gets.chomp.to_i
+      end
+
     if popular_selection == top10.length
       main_menu_loop
     end
     # binding.pry
     Favorite.find_or_create_by(user_id: self.current_user.id, beer_id: top10[popular_selection])
     puts "We're adding BEER NUMBAAA #{popular_selection} to your favorites list"
-
     puts "It is done."
-    puts "(1) to return to main menu"
-    puts "(2) to return to most popular beers"
+    puts "(1) to return to most popular beers"
+    puts "(2) to return to main menu"
       user_input = gets.chomp.to_i
-      if user_input == 1
-        main_menu
-      else
-        most_popular_beers
+      until user_input == 1 || user_input == 2
+        string_arr = ["Had a bit of drink eh? Please select (1) - (10)", "Seriously, please select (1) - (10)", "Put your drink down and gently press (1) - (10)", "We can go all day. (1) - (10)", "No seriously, you can't beat our loop. Please select (1) - (10)", "Ah fine, you win. SIKE. Please select (1) - (10)"]
+        sleep (1)
+        puts "#{string_arr.sample}".red
+        puts "-------------------------------------------------------------".bold.yellow
+        puts "(1) to return to most popular beers"
+        puts "(2) to return to main menu"
+        puts "-------------------------------------------------------------".bold.yellow
+        user_input = gets.chomp.to_i
       end
+    if user_input == 1
+      main_menu
+    else
+      most_popular_beers
+    end
   end
 
   def beer_recommendations
@@ -455,19 +565,21 @@ end
     beer_style_match = []
     beer_style_and_strength_match = []
     #add all beers to array by style_preference
-    user_beer_style_preferences.each do |style_pref|
-      beer_style_match << Beer.where(style: style_pref) #need to iterate through Beer.where(style: style_pref and shovel each beer instance into beermatch)
-    end
+      user_beer_style_preferences.each do |style_pref|
+        beer_style_match << Beer.where(style: style_pref) #need to iterate through Beer.where(style: style_pref and shovel each beer instance into beermatch)
+      end
     # binding.pry
     final_beer_selection = []
-    beer_style_match.flatten.select do |beer|
+      beer_style_match.flatten.select do |beer|
         self.user_prefs_strength.each do |pref|
-        if beer.strength == pref
-          final_beer_selection << beer
+          if beer.strength == pref
+            final_beer_selection << beer
+          end
         end
       end
-    end
+
     final_beer_selection.uniq
+
     if final_beer_selection.length > 15
       final_beer_selection = final_beer_selection.first(15)
     end
@@ -478,14 +590,30 @@ end
     sleep(1)
     puts "..."
     sleep(1)
-    puts "Here are some beers we think you'd like. Select 0-#{final_beer_selection.length - 1} to add to your favorites or #{final_beer_selection.length} to return to menu"
+    puts "Here are some beers we think you'd like. Select 0-#{final_beer_selection.length - 1} to add to your favorites or #{final_beer_selection.length} to return to menu".red
+    put_yellow_line
     rec_list = final_beer_selection.each_with_index do |beer, index|
-
       puts "(#{index})  | Name: #{beer.name} | ABV: #{beer.abv})"
     end
 
     puts "(#{final_beer_selection.length})  Return to main menu"
+    put_yellow_line
+
     favorite_selection = gets.chomp.to_i
+
+    until favorite_selection.between?(0, final_beer_selection.length)
+      sleep(1)
+      string_arr = ["Had a bit of drink eh? Please select (0) - (10)", "Seriously, please select (0) - (10)", "Put your drink down and gently press (0) - (10)", "We can go all day. (0) - (10)", "No seriously, you can't beat our loop. Please select (0) - (10)", "Ah fine, you win. SIKE. Please select (0) - (10)"]
+      puts "#{string_arr.sample}".red
+      put_yellow_line
+        rec_list = final_beer_selection.each_with_index do |beer, index|
+          puts "(#{index})  | Name: #{beer.name} | ABV: #{beer.abv})"
+        end
+      puts "(#{final_beer_selection.length})  Return to main menu"
+      put_yellow_line
+      favorite_selection = gets.chomp.to_i
+    end
+
     if favorite_selection == final_beer_selection.length
       main_menu_loop
     end
@@ -494,17 +622,24 @@ end
     puts "We're adding BEER NUMBAAA #{favorite_selection} to your favorites list"
     #if max 8 put, sorry you've already reached your limit of favorites. Please remove 1 from your list while we learn more about coding.
     puts "It is done."
-    puts "(1) to return to main_menu"
-    puts "(2) to return to beer recommendations"
+    puts "(1) to select more beers"
+    puts "(2) to return to main menu"
       user_input = gets.chomp.to_i
-      if user_input == 1
+      until user_input == 1 || user_input == 2
+        string_arr = ["Had a bit of drink eh? Please select (1) - (10)", "Seriously, please select (1) - (10)", "Put your drink down and gently press (1) - (10)", "We can go all day. (1) - (10)", "No seriously, you can't beat our loop. Please select (1) - (10)", "Ah fine, you win. SIKE. Please select (1) - (10)"]
+        sleep (1)
+        puts "#{string_arr.sample}".red
+        puts "-------------------------------------------------------------".bold.yellow
+        puts "(1) to select more beers."
+        puts "(2) to return to main menu."
+        puts "-------------------------------------------------------------".bold.yellow
+        user_input = gets.chomp.to_i
+      end
+      if user_input == 2
         main_menu
       else
         beer_recommendations
       end
-
-    # beer_recommendations
-    # gets.chomp
   end
 
   def change_menu(user_main_menu_input)
@@ -516,7 +651,7 @@ end
     elsif @user_main_menu_input == 3
       puts discover_beers_menu #execute discover_beers_menu method
     elsif @user_main_menu_input == 4
-      puts "(●´▽｀●)_旦”☆”旦_(○´ー｀○)"
+      puts "(●´▽｀●)_旦”☆”旦_(○´ー｀○)".red
       sleep(1)
       puts "Byeeee and enjoy your drink!"
       sleep(1)
@@ -531,7 +666,8 @@ end
     #   puts "(3) Discover new beers"
     #   puts "(4) Close program and drink"
     # end
+    end
   end
-  end
+
 
 end
