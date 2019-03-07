@@ -3,6 +3,8 @@ class BeerBud
 
 attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beers, :user_input_from_selected_beer, :selected_fav_beer, :user_prefs_strength
 
+attr_accessor :favorite_list_array
+
 
 def run
   welcome
@@ -118,7 +120,8 @@ end
     #limit to 8 selections
     #below where it says puts, pull data
     # binding.pry
-    favorite_list_array = self.current_user.favorites
+    self.current_user.favorites.reload
+    @favorite_list_array = self.current_user.favorites
     if favorite_list_array == []
       puts "You have not selected any favorites!"
       puts "Hit 1 to return to main menu when you're ready"
@@ -156,7 +159,7 @@ end
   end
 
   def pairing_info
-    puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers} (#{selected_fav_beer})"
+    puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers} (#{selected_fav_beer.name})"
     # binding.pry
     pairings = selected_fav_beer.foodPairings
     glassware = selected_fav_beer.glassware
@@ -174,7 +177,6 @@ end
     # binding.pry
     # favorite_list_array = self.current_user.favorites
     # i = favorite_list_array.length
-    favorite_list_array = self.current_user.favorites
     sleep(1)
     puts "Hang on...we are destroying this beer from your favorites"
     puts " BEER Number: #{user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
@@ -184,7 +186,8 @@ end
     puts "(★▼▼)o┳*-- BEER NUMBA #{user_input_from_favorite_beers}"
     sleep(1)
     Favorite.find_by(user_id: self.current_user.id, beer_id: selected_fav_beer.id).destroy
-    favorite_list_array = favorite_list_array.select {|fav_item| fav_item.beer_id != self.selected_fav_beer.id}
+    @favorite_list_array = favorite_list_array.select {|fav_item| fav_item.beer_id != self.selected_fav_beer.id}
+
     # binding.pry
     puts ""
     puts ""
@@ -456,7 +459,9 @@ end
     # puts "(8)  Beer I     |     IPA       | 5.4%     "
     puts "(#{final_beer_selection.length})  Return to main menu"
     favorite_selection = gets.chomp.to_i
-    # binding.pry
+    if favorite_selection == final_beer_selection.length
+      main_menu_loop
+    end
     Favorite.create(user_id: self.current_user.id, beer_id: final_beer_selection[favorite_selection].id)
     #method to create favorite instance
     puts "We're adding BEER NUMBAAA #{favorite_selection} to your favorites list"
