@@ -1,4 +1,4 @@
-# require 'pry'
+require 'pry'
 class BeerBud
 
 attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beers, :user_input_from_selected_beer, :selected_fav_beer
@@ -290,7 +290,48 @@ end
   #   end
   # end
 
+  # puts "Your favorites list:"
+  # puts "Use 0-#{favorite_list_array.length} to make your selection"
+  # fav_list = favorite_list_array.each_with_index do |beer, index|
+  #   puts "(#{index}) #{beer.beer.name}"
+  # end
+  # puts "(#{fav_list.length}) Return to main menu"
+  # @user_input_from_favorite_beers = gets.chomp.to_i
+  # @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
+  # puts user_input_from_favorite_beers
+  #   if user_input_from_favorite_beers == fav_list.length
+  #     main_menu_loop
+  #   else
+
+  # fav_list = favorite_list_array.each_with_index do |beer, index|
+  #   puts "(#{index}) #{beer.beer.name}"
+
   def beer_recommendations
+
+
+    beer_style_match = []
+    beer_style_and_strength_match = []
+    #add all beers to array by style_preference
+    user_beer_style_preferences.each do |style_pref|
+      beer_style_match << Beer.where(style: style_pref) #need to iterate through Beer.where(style: style_pref and shovel each beer instance into beermatch)
+    end
+    binding.pry
+
+
+    #add all beers that match strength preference
+
+    # user_beer_strength_preferences.each do |strength_pref|
+    #   beer_style_match.flatten.each do |beer|
+    #     if beer.strength == strength_pref
+    #       beer_style_and_strength_match << beer
+    #     end
+    #   end
+    # end
+    # binding.pry
+    # #   beer_match << Beer.where(strength: style_pref)
+    # # end
+
+
     #mvp - list 9 beers from join table
     #stretch - add next/previous pagination option
     puts "Hooooold on tight! We're Searching for beers based on your preferences"
@@ -299,18 +340,26 @@ end
     puts "..."
     sleep(1)
     puts "Here are some beers we think you'd like. Select 0-9 to add to your favorite or return to menu"
-    puts "        Name    |     Type      |   ABV    "
-    puts "     ---------- | ------------  | ---------"
-    puts "(0)  Beer A     |     IPA       | 5.4%     "  #code should pull from User's preference_join_table to look for abv and style pref.; Then return beers that match preference
-    puts "(1)  Beer B     |     IPA       | 5.4%     "
-    puts "(2)  Beer C     |     IPA       | 5.4%     "
-    puts "(3)  Beer D     |     IPA       | 5.4%     "
-    puts "(4)  Beer E     |     IPA       | 5.4%     "
-    puts "(5)  Beer F     |     IPA       | 5.4%     "
-    puts "(6)  Beer G     |     IPA       | 5.4%     "
-    puts "(7)  Beer H     |     IPA       | 5.4%     "
-    puts "(8)  Beer I     |     IPA       | 5.4%     "
-    puts "(9)  Return to main menu"
+    rec_list = beer_match.flatten.first(15).each_with_index do |beer, index|
+
+      puts "(#{index}) | Name: #{beer.name} | ABV: #{beer.abv})"
+    end
+
+
+
+
+    # puts "        Name    |     Type      |   ABV    "
+    # puts "     ---------- | ------------  | ---------"
+    # puts "(0)  Beer A     |     IPA       | 5.4%     "  #code should pull from User's preference_join_table to look for abv and style pref.; Then return beers that match preference
+    # puts "(1)  Beer B     |     IPA       | 5.4%     "
+    # puts "(2)  Beer C     |     IPA       | 5.4%     "
+    # puts "(3)  Beer D     |     IPA       | 5.4%     "
+    # puts "(4)  Beer E     |     IPA       | 5.4%     "
+    # puts "(5)  Beer F     |     IPA       | 5.4%     "
+    # puts "(6)  Beer G     |     IPA       | 5.4%     "
+    # puts "(7)  Beer H     |     IPA       | 5.4%     "
+    # puts "(8)  Beer I     |     IPA       | 5.4%     "
+    puts "(#{beer_match.flatten.first(15).length})  Return to main menu"
     favorite_selection = gets.chomp.to_i
     #method to create favorite instance
     puts "We're adding BEER NUMBAAA #{favorite_selection} to your favorites list"
@@ -327,7 +376,7 @@ end
 
     # beer_recommendations
     # gets.chomp
-    end
+  end
 
   def change_menu(user_main_menu_input)
     sleep(1)
