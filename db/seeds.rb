@@ -22,6 +22,6 @@
 
 
 Favorite.destroy_all
-favorites = 50.times do Favorite.create ([
-  {:user_id => rand(49..58), :beer_id => rand(1286...1540)}
-  ]) end
+# favorites = 200.times do Favorite.create ([
+#   {:user_id => rand(49..58), :beer_id => rand(1286...1540)}
+#   ]) end
