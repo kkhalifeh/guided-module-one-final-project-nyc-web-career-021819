@@ -49,39 +49,44 @@ end
   end
 
   def favorite_beers
-    #pull data from join_table :favorites, puts beer.name from array []
-    #limit to 8 selections
-    #below where it says puts, pull data
     favorite_list_array = self.current_user.favorites
-    puts "Your favorites list:"
-    puts "Use 0-#{favorite_list_array.length} to make your selection"
-    fav_list = favorite_list_array.each_with_index do |beer, index|
-      puts "(#{index}) #{beer.beer.name}"
-    end
-    puts "(#{fav_list.length}) Return to main menu"
-    @user_input_from_favorite_beers = gets.chomp.to_i
-    @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
-    puts user_input_from_favorite_beers
-      if user_input_from_favorite_beers == fav_list.length
-        main_menu_loop
-      else
-        puts "CURRENT BEER SELECTION: #{selected_fav_beer.name}"
-        selected_beer_menu
-        @user_input_from_selected_beer = gets.chomp.to_i
-          if user_input_from_selected_beer == 0
-            rate_beer #call method to rate beer, this should update our user_favorite instance of this beer
-          elsif user_input_from_selected_beer == 1
-            pairing_info #method to display pairing info , input should take selected
-          elsif user_input_from_selected_beer == 2
-            remove_from_favorite #method to destroy favorite object from :favorite_table
-        else
+    if favorite_list_array == []
+      puts "You have no favorite beers!"
+      puts "Hit 1 to return to main menu when you're ready"
+      gets.chomp
+      sleep(1)
+      main_menu_loop
+    else
+      puts "Your favorites list:"
+      puts "Use 0-#{favorite_list_array.length} to make your selection"
+      fav_list = favorite_list_array.each_with_index do |beer, index|
+        puts "(#{index}) #{beer.beer.name}"
+      end
+      puts "(#{fav_list.length}) Return to main menu"
+      @user_input_from_favorite_beers = gets.chomp.to_i
+      # puts user_input_from_favorite_beers
+        if user_input_from_favorite_beers == fav_list.length
           main_menu_loop
+        else
+          @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
+          puts "CURRENT BEER SELECTION: #{selected_fav_beer.name}"
+          selected_beer_menu
+          @user_input_from_selected_beer = gets.chomp.to_i
+            if user_input_from_selected_beer == 0
+              rate_beer #call method to rate beer, this should update our user_favorite instance of this beer
+            elsif user_input_from_selected_beer == 1
+              pairing_info #method to display pairing info , input should take selected
+            elsif user_input_from_selected_beer == 2
+              remove_from_favorite #method to destroy favorite object from :favorite_table
+          else
+            main_menu_loop
+        end
       end
     end
   end
 
   def pairing_info
-    puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers}"
+    puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers} (#{selected_fav_beer.name})"
     # binding.pry
     pairings = selected_fav_beer.foodPairings
     glassware = selected_fav_beer.glassware
@@ -96,20 +101,24 @@ end
   end
 
   def remove_from_favorite
-    binding.pry
+    # binding.pry
+    favorite_list_array = self.current_user.favorites
+    i = favorite_list_array.length
     sleep(1)
     puts "Hang on...we are destroying this beer from your favorites"
-    puts " BEER Number: #{$user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
+    puts " BEER Number: #{user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
     sleep(1)
     puts ""
     puts ""
-    puts "(★▼▼)o┳*-- BEER NUMBA #{$user_input_from_favorite_beers}"
+    puts "(★▼▼)o┳*-- BEER NUMBA #{user_input_from_favorite_beers}"
     sleep(1)
+    Favorite.find_by(user_id: self.current_user.id, beer_id: selected_fav_beer.id).destroy
+    binding.pry
     puts ""
     puts ""
     puts "It is done. Press 1 to return to main menu"
     gets.chomp
-    main_menu
+    main_menu_loop
     puts ""
   end
 
@@ -291,6 +300,7 @@ end
   # end
 
   def beer_recommendations
+    binding.pry
     #mvp - list 9 beers from join table
     #stretch - add next/previous pagination option
     puts "Hooooold on tight! We're Searching for beers based on your preferences"
