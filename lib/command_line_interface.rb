@@ -2,16 +2,11 @@ require 'pry'
 class BeerBud
 
 attr_reader :current_user, :user_main_menu_input, :user_input_from_favorite_beers, :user_input_from_selected_beer, :selected_fav_beer, :user_prefs_strength
-#defining global variables
 
-# $user_input_from_favorite_beers = nil
-# @user_main_menu_input = nil
+
 def run
   welcome
   get_username
-  #user name is returned downcase
-  # User .find_by("name) to evaluate if new or returning user
-  #assuming returning user
   main_menu_loop
 end
 
@@ -25,7 +20,6 @@ end
 
 def welcome
   puts "Welcome to BeerBud!"
-  sleep(1)
 end
 
 
@@ -33,13 +27,84 @@ end
     #method to check if username exists in data base
     # if it doesnt, create it a new user
     puts "Please enter your user name"
-    name = gets.chomp.downcase
-    @current_user = User.find_or_create_by(user_name: name)
+    @current_user_name = gets.chomp.downcase
+    if User.find_by(user_name: @current_user_name).nil?
+      puts "Hey, you're new here. Welcome to BeerBud :)" #method to create new user
+      User.create(user_name: @current_user_name)
+      @current_user = User.find_by(user_name: @current_user_name)
+      puts "Let's get you started by making a few selections"
+      beer_type_menu_onboard
+    else @current_user = User.find_by(user_name: @current_user_name)
+      puts "Welcome back #{@current_user.user_name}."
+    end
+    # @current_user = User.find_or_create_by(user_name: name)
     sleep(1)
   end
 
+  def new_user_onboard
+    puts "Let's get you started by setting some preferences"
+    beer_type_menu_onboard
+    abv_menu_onboard
+
+    #help user add 1 beer_style_preference and 1 beer_strength preference
+
+  end
+
+  def beer_type_menu_onboard
+    beer_type_array = ["Pilsener", "Ale", "Tripel", "Lager", "Porter", "Stout"," Kölsch", "Weisse"]
+    puts "Alrighty! #{@current_user_name}. Let us know what type of beers you like"
+    "Please press any key from (0) - (7) to make your selection."
+    puts ""
+    puts "(0) Pilsener"
+    puts "(1) Ale"
+    puts "(2) Tripel"
+    puts "(3) Lager"
+    puts "(4) Porter"
+    puts "(5) Stout"
+    puts "(6) Kölsch"
+    puts "(7) Weisse"
+
+    add_to_pref = gets.chomp.to_i
+    Preference.find_or_create_by(user_id: User.find_by(user_name: @current_user_name).id, beer_style: beer_type_array[add_to_pref])
+
+    puts "Hooooold tight. We're updating your preferences to include #{beer_type_array[add_to_pref]} beers"
+    sleep(1)
+    puts "Your preference has been saved!"
+    puts "(1) to make additional selection."
+    puts "(2) to continue onboarding"
+    user_input = gets.chomp.to_i
+    if user_input == 1
+      beer_type_menu_onboard
+    else
+      abv_menu_onboard
+    end
+  end
+
+  def abv_menu_onboard
+    beer_strength_array = ["Light", "Medium", "Strong"]
+    puts "Alrighty! #{@current_user_name}. How strong do you like your beers?"
+    puts "Please press any key from (0) - (2) to make your selection."
+    puts "Your current selections: #{user_beer_strength_preferences}"
+    puts "What types of beers would you like to add to your preferences?"
+    puts "(0) Light 0.1% - 3.9% abv"
+    puts "(1) Medium 3.90 - 5.9% abv"
+    puts "(2) Strong 6% + abv"
+    add_to_pref = gets.chomp.to_i
+      Preference.find_or_create_by(user_id: User.find_by(user_name: @current_user_name).id, beer_strength: beer_strength_array[add_to_pref])
+      puts "Hang on...we're updating your preference with #{beer_strength_array[add_to_pref]} beers!"
+      puts "Your preference has been saved!"
+      puts "(1) to make additional selection."
+      puts "(2) to continue onboarding"
+      user_input = gets.chomp.to_i
+      if user_input == 1
+        abv_menu_onboard
+      else
+        main_menu_loop
+      end
+  end
+
   def main_menu
-    puts "Welcome back! What would you like to do?"
+    puts "#{@current_user_name}!, what can I do for you?"
     sleep(1)
     puts "(1) View my favorites"
     puts "(2) Access beer preferences"
@@ -403,14 +468,16 @@ end
       sleep(1)
       exit!
     else
-      sleep(1)
-      puts "Had a bit of drink eh? Please select a valid input (1-4)"
-      sleep(1)
-      puts "(1) View my favorites"
-      puts "(2) Access beer preferences"
-      puts "(3) Discover new beers"
-      puts "(4) Close program and drink"
-    end
+    # else
+    #   sleep(1)
+    #   puts "Had a bit of drink eh? Please select a valid input (1-4)"
+    #   sleep(1)
+    #   puts "(1) View my favorites"
+    #   puts "(2) Access beer preferences"
+    #   puts "(3) Discover new beers"
+    #   puts "(4) Close program and drink"
+    # end
+  end
   end
 
 end
