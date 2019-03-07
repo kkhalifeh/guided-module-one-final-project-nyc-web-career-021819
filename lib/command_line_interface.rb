@@ -158,10 +158,6 @@ end
   end
 
   def favorite_beers
-    #pull data from join_table :favorites, puts beer.name from array []
-    #limit to 8 selections
-    #below where it says puts, pull data
-    # binding.pry
     self.current_user.favorites.reload
     @favorite_list_array = self.current_user.favorites
     if favorite_list_array == []
@@ -178,7 +174,6 @@ end
     end
     puts "(#{fav_list.length}) Return to main menu"
     @user_input_from_favorite_beers = gets.chomp.to_i
-    # binding.pry
     puts user_input_from_favorite_beers
       if user_input_from_favorite_beers == fav_list.length
         main_menu_loop
@@ -202,7 +197,6 @@ end
 
   def pairing_info
     puts "Here's the pairing information for BEER NUMBA: #{user_input_from_favorite_beers} (#{selected_fav_beer.name})"
-    # binding.pry
     pairings = selected_fav_beer.foodPairings
     glassware = selected_fav_beer.glassware
     puts "Have it with: #{pairings}"
@@ -216,9 +210,6 @@ end
   end
 
   def remove_from_favorite
-    # binding.pry
-    # favorite_list_array = self.current_user.favorites
-    # i = favorite_list_array.length
     sleep(1)
     puts "Hang on...we are destroying this beer from your favorites"
     puts " BEER Number: #{user_input_from_favorite_beers} ★≡≡＼（` △´＼）"
@@ -229,8 +220,6 @@ end
     sleep(1)
     Favorite.find_or_create_by(user_id: self.current_user.id, beer_id: selected_fav_beer.id).destroy
     @favorite_list_array = favorite_list_array.select {|fav_item| fav_item.beer_id != self.selected_fav_beer.id}
-
-    # binding.pry
     puts ""
     puts ""
     puts "It is done. Press 1 to return to main menu"
@@ -238,11 +227,6 @@ end
     main_menu_loop
     puts ""
   end
-
-  # def remove_fav_object
-  #   favorite_list_array = self.current_user.favorites
-  #   favorite_list_array = favorite_list_array.select {|fav_item| fav_item.beer_id != self.selected_fav_beer.id}
-  # end
 
   def selected_beer_menu
 
@@ -437,6 +421,35 @@ end
 
   # fav_list = favorite_list_array.each_with_index do |beer, index|
   #   puts "(#{index}) #{beer.beer.name}"
+  def most_popular_beers
+    puts "Here are the top beers added by BeerBud users!"
+    most_popular = Favorite.group('beer_id').order('count_all DESC').count
+    most_popular = most_popular.keys
+    top10 = most_popular.first(10)
+    puts "Select 0-#{top10.length - 1} to add to your favorites or #{top10.length} to return to menu"
+      top10.each_with_index do |beer,index|
+      puts "(#{index})  | Name: #{Beer.find(beer).name} | ABV: #{Beer.find(beer).abv})"
+    end
+    puts "(#{top10.length})  Return to main menu"
+    popular_selection = gets.chomp.to_i
+    if popular_selection == top10.length
+      main_menu_loop
+    end
+    # binding.pry
+    Favorite.create(user_id: self.current_user.id, beer_id: top10[popular_selection])
+    puts "We're adding BEER NUMBAAA #{popular_selection} to your favorites list"
+
+    puts "It is done."
+    puts "(1) to return to main menu"
+    puts "(2) to return to most popular beers"
+      user_input = gets.chomp.to_i
+      if user_input == 1
+        main_menu
+      else
+        most_popular_beers
+      end
+  end
+
   def beer_recommendations
     @user_prefs_strength = user_beer_strength_preferences
     beer_style_match = []
@@ -458,20 +471,6 @@ end
     if final_beer_selection.length > 15
       final_beer_selection = final_beer_selection.first(15)
     end
-    #add all beers that match strength preference
-
-    # user_beer_strength_preferences.each do |strength_pref|
-    #   beer_style_match.flatten.each do |beer|
-    #     if beer.strength == strength_pref
-    #       beer_style_and_strength_match << beer
-    #     end
-    #   end
-    # end
-    # binding.pry
-    # #   beer_match << Beer.where(strength: style_pref)
-    # # end
-
-
     #mvp - list 9 beers from join table
     #stretch - add next/previous pagination option
     puts "Hooooold on tight! We're Searching for beers based on your preferences"
@@ -485,20 +484,6 @@ end
       puts "(#{index})  | Name: #{beer.name} | ABV: #{beer.abv})"
     end
 
-
-
-
-    # puts "        Name    |     Type      |   ABV    "
-    # puts "     ---------- | ------------  | ---------"
-    # puts "(0)  Beer A     |     IPA       | 5.4%     "  #code should pull from User's preference_join_table to look for abv and style pref.; Then return beers that match preference
-    # puts "(1)  Beer B     |     IPA       | 5.4%     "
-    # puts "(2)  Beer C     |     IPA       | 5.4%     "
-    # puts "(3)  Beer D     |     IPA       | 5.4%     "
-    # puts "(4)  Beer E     |     IPA       | 5.4%     "
-    # puts "(5)  Beer F     |     IPA       | 5.4%     "
-    # puts "(6)  Beer G     |     IPA       | 5.4%     "
-    # puts "(7)  Beer H     |     IPA       | 5.4%     "
-    # puts "(8)  Beer I     |     IPA       | 5.4%     "
     puts "(#{final_beer_selection.length})  Return to main menu"
     favorite_selection = gets.chomp.to_i
     if favorite_selection == final_beer_selection.length
