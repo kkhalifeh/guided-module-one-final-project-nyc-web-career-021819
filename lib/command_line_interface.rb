@@ -185,7 +185,7 @@ end
     puts ""
     puts "(★▼▼)o┳*-- BEER NUMBA #{user_input_from_favorite_beers}"
     sleep(1)
-    Favorite.find_by(user_id: self.current_user.id, beer_id: selected_fav_beer.id).destroy
+    Favorite.find_or_create_by(user_id: self.current_user.id, beer_id: selected_fav_beer.id).destroy
     @favorite_list_array = favorite_list_array.select {|fav_item| fav_item.beer_id != self.selected_fav_beer.id}
 
     # binding.pry
