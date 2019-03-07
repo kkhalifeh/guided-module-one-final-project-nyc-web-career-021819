@@ -21,6 +21,10 @@ end
 
 
 def welcome
+ puts "-------------------------------------------------------------".bold.yellow
+  a = Artii::Base.new :font => 'slant'
+ puts a.asciify('BeerBud!').colorize(:red)
+ puts "-------------------------------------------------------------".bold.yellow
   puts "Welcome to BeerBud!"
 end
 
@@ -28,13 +32,17 @@ end
   def get_username
     #method to check if username exists in data base
     # if it doesnt, create it a new user
-    puts "Please enter your user name"
+    puts "Please enter your user name:".bold.red
     @current_user_name = gets.chomp.downcase
     if User.find_by(user_name: @current_user_name).nil?
-      puts "Hey, you're new here. Welcome to BeerBud :)" #method to create new user
+      puts "-------------------------------------------------------------".bold.yellow
+      puts "Hey, you're new here. Welcome to BeerBud :)."
+      #method to create new user
       User.create(user_name: @current_user_name)
+      sleep (1)
       @current_user = User.find_by(user_name: @current_user_name)
-      puts "Let's get you started by making a few selections"
+      puts "Let's get started by making a few selections."
+      sleep(1)
       beer_type_menu_onboard
     else @current_user = User.find_by(user_name: @current_user_name)
       puts "Welcome back #{@current_user.user_name}."
@@ -43,20 +51,21 @@ end
     sleep(1)
   end
 
-  def new_user_onboard
-    puts "Let's get you started by setting some preferences"
-    beer_type_menu_onboard
-    abv_menu_onboard
-
-    #help user add 1 beer_style_preference and 1 beer_strength preference
-
-  end
+  # def new_user_onboard
+  #   puts "Let's get you started by setting some preferences"
+  #   beer_type_menu_onboard
+  #   abv_menu_onboard
+  #
+  #   #help user add 1 beer_style_preference and 1 beer_strength preference
+  #
+  # end
 
   def beer_type_menu_onboard
     beer_type_array = ["Pilsener", "Ale", "Tripel", "Lager", "Porter", "Stout"," Kölsch", "Weisse"]
-    puts "Alrighty! #{@current_user_name}. Let us know what type of beers you like"
-    "Please press any key from (0) - (7) to make your selection."
-    puts ""
+    puts "Let us know what type of beers you like."
+    sleep (1)
+    "Please press any key from (0) - (7) to make your selection.".bold.red
+    puts "-------------------------------------------------------------".bold.yellow
     puts "(0) Pilsener"
     puts "(1) Ale"
     puts "(2) Tripel"
@@ -65,16 +74,30 @@ end
     puts "(5) Stout"
     puts "(6) Kölsch"
     puts "(7) Weisse"
-
+    puts "-------------------------------------------------------------".bold.yellow
     add_to_pref = gets.chomp.to_i
     Preference.find_or_create_by(user_id: User.find_by(user_name: @current_user_name).id, beer_style: beer_type_array[add_to_pref])
 
     puts "Hooooold tight. We're updating your preferences to include #{beer_type_array[add_to_pref]} beers"
     sleep(1)
+    puts "..."
+    sleep(1)
     puts "Your preference has been saved!"
-    puts "(1) to make additional selection."
-    puts "(2) to continue onboarding"
+    puts "-------------------------------------------------------------".bold.yellow
+    puts "(1) to select more styles."
+    puts "(2) to continue onboarding."
+    puts "-------------------------------------------------------------".bold.yellow
     user_input = gets.chomp.to_i
+    until user_input == 1 || user_input == 2
+      string_arr = ["Had a bit of drink eh? Please select (1) or (2)", "Seriously, please select (1) or (2)", "Put your drink down and gently press (1) or (2)", "We can go all day. (1) or (2)", "No seriously, you can't beat our loop. Please select (1) or (2)", "Ah fine, you win. SIKE. Please select (1) or (2)"]
+      sleep (1)
+      puts "#{string_arr.sample}".red
+      puts "-------------------------------------------------------------".bold.yellow
+      puts "(1) to select more styles."
+      puts "(2) to continue onboarding."
+      puts "-------------------------------------------------------------".bold.yellow
+      user_input = gets.chomp.to_i
+    end
     if user_input == 1
       beer_type_menu_onboard
     else
@@ -84,20 +107,36 @@ end
 
   def abv_menu_onboard
     beer_strength_array = ["Light", "Medium", "Strong"]
-    puts "Alrighty! #{@current_user_name}. How strong do you like your beers?"
-    puts "Please press any key from (0) - (2) to make your selection."
-    puts "Your current selections: #{user_beer_strength_preferences}"
-    puts "What types of beers would you like to add to your preferences?"
+    puts "Cool! Now let's select how strong you like your beers.".bold.red
+    sleep(1)
+    puts "Please press any key from (0) - (2) to make your selection.".bold.red
+    puts "-------------------------------------------------------------".bold.yellow
     puts "(0) Light 0.1% - 3.9% abv"
     puts "(1) Medium 3.90 - 5.9% abv"
     puts "(2) Strong 6% + abv"
+    puts "-------------------------------------------------------------".bold.yellow
     add_to_pref = gets.chomp.to_i
       Preference.find_or_create_by(user_id: User.find_by(user_name: @current_user_name).id, beer_strength: beer_strength_array[add_to_pref])
       puts "Hang on...we're updating your preference with #{beer_strength_array[add_to_pref]} beers!"
+      sleep(1)
+      puts "..."
+      sleep(1)
       puts "Your preference has been saved!"
-      puts "(1) to make additional selection."
-      puts "(2) to continue onboarding"
+      puts "-------------------------------------------------------------".bold.yellow
+      puts "(1) to select additional options."
+      puts "(2) to continue onboarding."
+      puts "-------------------------------------------------------------".bold.yellow
       user_input = gets.chomp.to_i
+      until user_input == 1 || user_input == 2
+        sleep(1)
+        string_arr = ["Had a bit of drink eh? Please select (1) or (2)", "Seriously, please select (1) or (2)", "Put your drink down and gently press (1) or (2)", "We can go all day. (1) or (2)", "No seriously, you can't beat our loop. Please select (1) or (2)", "Ah fine, you win. SIKE. Please select (1) or (2)"]
+        puts "#{string_arr.sample}".red
+        puts "-------------------------------------------------------------".bold.yellow
+        puts "(1) to select more styles."
+        puts "(2) to continue onboarding."
+        puts "-------------------------------------------------------------".bold.yellow
+        user_input = gets.chomp.to_i
+      end
       if user_input == 1
         abv_menu_onboard
       else
@@ -106,12 +145,15 @@ end
   end
 
   def main_menu
-    puts "#{@current_user_name}!, what can I do for you?"
+
+    puts "What can I do for you?".bold.red
+    puts "-------------------------------------------------------------".bold.yellow
     sleep(1)
     puts "(1) View my favorites"
     puts "(2) Access beer preferences"
     puts "(3) Discover new beers"
     puts "(4) Close program and drink"
+    puts "-------------------------------------------------------------".bold.yellow
     @user_main_menu_input = gets.chomp.to_i
   end
 
