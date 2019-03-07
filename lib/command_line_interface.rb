@@ -194,14 +194,24 @@ attr_accessor :favorite_list_array
       else
         sleep(1)
         @selected_fav_beer = favorite_list_array[user_input_from_favorite_beers].beer
-        puts "CURRENT BEER SELECTION: #{selected_fav_beer.name}"
+        puts "CURRENT BEER SELECTION: #{selected_fav_beer.name}".red
+        put_yellow_line
         selected_beer_menu
+        put_yellow_line
         @user_input_from_selected_beer = gets.chomp.to_i
-          if user_input_from_selected_beer == 0
+        until add_to_pref.between?(1,4)
+          string_arr = ["Had a bit of drink eh? Please select (1) - (4)", "Seriously, please select (1) - (4)", "Put your drink down and gently press (1) - (4)", "We can go all day. (1) - (4)", "No seriously, you can't beat our loop. Please select (1) - (4)", "Ah fine, you win. SIKE. Please select (1) - (4)"]
+          sleep (1)
+          put_yellow_line
+          selected_beer_menu
+          put_yellow_line
+          @user_input_from_selected_beeer = gets.chomp.to_i
+        end
+          if user_input_from_selected_beer == 1
             rate_beer #call method to rate beer, this should update our user_favorite instance of this beer
-          elsif user_input_from_selected_beer == 1
-            pairing_info #method to display pairing info , input should take selected
           elsif user_input_from_selected_beer == 2
+            pairing_info #method to display pairing info , input should take selected
+          elsif user_input_from_selected_beer == 3
             remove_from_favorite #method to destroy favorite object from :favorite_table
         else
           sleep(1)
@@ -247,12 +257,13 @@ attr_accessor :favorite_list_array
 
   def selected_beer_menu
 
-    puts "What would you like to know about this beer?"
-    puts "Use 0-3 to make your selection"
-    puts "(0) Rate this beer"
-    puts "(1) Pairing Info"
-    puts "(2) Remove this beer from favorites"
-    puts "(3) Return to main menu"
+    puts "What would you like to know about this beer?".red
+    puts "Use 0-3 to make your selection".red
+    put_yellow_line
+    puts "(1) Rate this beer"
+    puts "(2) Pairing Info"
+    puts "(3) Remove this beer from favorites"
+    puts "(4) Return to main menu"
   end
 
   def beer_preferences
@@ -264,14 +275,14 @@ attr_accessor :favorite_list_array
     puts "(3) Return to main menu"
     puts "-------------------------------------------------------------".bold.yellow
     user_input = gets.chomp.to_i
-    until user_input == 1 || user_input == 2
+    until user_input == 1 || user_input == 2 || user_input == 3
       string_arr = ["Had a bit of drink eh? Please select (1) - (3)", "Seriously, please select (1) - (3)", "Put your drink down and gently press (1) - (3)", "We can go all day. (1) - (3)", "No seriously, you can't beat our loop. Please select (1) - (3)", "Ah fine, you win. SIKE. Please select (1) - (3)"]
       sleep (1)
       puts "#{string_arr.sample}".red
       puts "-------------------------------------------------------------".bold.yellow
-      puts "(0) Beer type"
-      puts "(1) ABV % preference"
-      puts "(2) Return to main menu"
+      puts "(1) Beer type"
+      puts "(2) ABV % preference"
+      puts "(3) Return to main menu"
       puts "-------------------------------------------------------------".bold.yellow
       user_input = gets.chomp.to_i
     end
