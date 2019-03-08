@@ -142,7 +142,7 @@ attr_accessor :favorite_list_array
       add_to_pref = gets.chomp.to_i
     end
 
-      Preference.find_or_create_by(user_id: User.find_by(user_name: @current_user_name).id, beer_strength: beer_strength_array[add_to_pref])
+      Preference.find_or_create_by(user_id: User.find_by(user_name: @current_user_name).id, beer_strength: beer_strength_array[add_to_pref - 1])
       puts "Hang on...we're updating your preference!".red
       sleep(1)
       puts "..."
@@ -394,7 +394,7 @@ attr_accessor :favorite_list_array
     puts "-------------------------------------------------------------".bold.yellow
     puts "Your current selections: #{user_beer_strength_preferences}"
     puts "-------------------------------------------------------------".bold.yellow
-    puts "Select (1) to (3) to select your ABV preferences.".red
+    puts "Select (1) to (3) to select your ABV preferences. Or (4) to go to main menu".red
     puts "(1) Light 0.1% - 3.9% abv"
     puts "(2) Medium 3.90 - 5.9% abv"
     puts "(3) Strong 6% + abv"
