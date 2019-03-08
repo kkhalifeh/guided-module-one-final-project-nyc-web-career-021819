@@ -24,3 +24,8 @@
 # favorites = 200.times do Favorite.create ([
 #   {:user_id => rand(49..58), :beer_id => rand(1540...1790)}
 #   ]) end
+
+# Rating.destroy_all
+# ratings= 300.times do Rating.create([
+#   {:user_id => rand(49..58), :beer_id => rand(1540...1790), :beer_rating => rand(1...10)}
+#   ]) end
